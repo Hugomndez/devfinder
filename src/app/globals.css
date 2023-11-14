@@ -2,6 +2,10 @@
   color-scheme: light;
 
   --background-color: hsl(227, 100%, 98%);
+
+  --FF: 'Space Mono';
+  --FW-Primary: 700;
+  --FW-Secondary: 400;
 }
 
 [data-theme='dark'] {
@@ -25,8 +29,10 @@ html {
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
-  font-size: 1.6rem;
+  font-family: var(--FF);
+  font-weight: var(--FW-Secondary);
+  font-size: 1.5rem;
+  line-height: normal;
   font-style: normal;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -46,4 +52,32 @@ img {
   display: block;
   max-inline-size: 100%;
   block-size: auto;
+}
+
+h1,
+h2 {
+  font-weight: var(--FW-Primary);
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-weight: var(--FW-Secondary);
+}
+
+h1 {
+  font-size: 2.6rem;
+}
+
+h2 {
+  font-size: 2.2rem;
+}
+
+h3 {
+  font-size: 1.6rem;
+}
+
+h4 {
+  font-size: 1.3rem;
 }
