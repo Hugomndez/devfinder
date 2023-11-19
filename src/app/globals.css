@@ -1,6 +1,8 @@
 :root {
   color-scheme: light;
 
+  --max-width: 730px;
+
   --just-white: hsl(0, 0%, 100%);
   --greyish-blue: hsl(217, 20%, 51%);
 
@@ -34,6 +36,9 @@ html {
 }
 
 body {
+  width: 100%;
+  height: 100vh;
+
   font-family: var(--FF);
   font-weight: var(--FW-Secondary);
   font-size: 1.5rem;
@@ -49,6 +54,13 @@ body {
   padding-inline: 24px;
 
   background-color: var(--background-color);
+}
+
+@media screen and (min-width: 768px) {
+  body {
+    display: grid;
+    place-items: center;
+  }
 }
 
 a {
