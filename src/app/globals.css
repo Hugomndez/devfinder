@@ -2,6 +2,7 @@
   color-scheme: light;
 
   --background-color: hsl(227, 100%, 98%);
+  --h1-color: hsl(217, 21%, 21%);
 
   --FF: 'Space Mono';
   --FW-Primary: 700;
@@ -12,6 +13,7 @@
   color-scheme: dark;
 
   --background-color: hsl(220, 40%, 13%);
+  --h1-color: hsl(0, 0%, 100%);
 }
 
 *,
@@ -68,6 +70,7 @@ h6 {
 
 h1 {
   font-size: 2.6rem;
+  color: var(--h1-color);
 }
 
 h2 {
