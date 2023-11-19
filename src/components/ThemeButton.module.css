@@ -1,0 +1,40 @@
+.button {
+  border: none;
+  background-color: transparent;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  font-size: 1.3rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 2.5px;
+
+  color: var(--greyish-blue);
+
+  cursor: pointer;
+}
+
+[data-theme='dark'] .button {
+  color: var(--just-white);
+}
+
+@media (hover: hover) {
+  .button:hover {
+    color: var(--h1-color);
+  }
+
+  .button:hover svg path {
+    fill: var(--h1-color);
+  }
+
+  [data-theme='dark'] .button:hover {
+    color: var(--greyish-blue);
+  }
+
+  .button:hover svg g path {
+    fill: var(--greyish-blue);
+  }
+}
