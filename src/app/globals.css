@@ -2,12 +2,15 @@
   color-scheme: light;
 
   --max-width: 730px;
+  --min-width: 320px;
 
   --just-white: hsl(0, 0%, 100%);
   --greyish-blue: hsl(217, 20%, 51%);
+  --blue: hsla(212, 100%, 50%, 1);
 
   --background-color: hsl(227, 100%, 98%);
   --h1-color: hsl(217, 21%, 21%);
+  --p-color: hsla(217, 35%, 45%, 1);
 
   --FF: 'Space Mono';
   --FW-Primary: 700;
@@ -18,6 +21,7 @@
   color-scheme: dark;
 
   --background-color: hsl(220, 40%, 13%);
+  --card-background: hsl(222, 41%, 20%);
   --h1-color: var(--just-white);
 }
 

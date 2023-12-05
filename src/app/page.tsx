@@ -1,12 +1,15 @@
 import Header from '@/components/Header';
+import ProfileCard from '@/components/ProfileCard';
 
 export default function Home() {
   return (
     <>
-      <Header />
-      <main>
-        <h1>Hello world!</h1>
-      </main>
+      <div>
+        <Header />
+        <main>
+          <ProfileCard />
+        </main>
+      </div>
     </>
   );
 }

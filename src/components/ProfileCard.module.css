@@ -1,0 +1,249 @@
+.section {
+  padding-block: 33px;
+  padding-inline: 24px;
+
+  max-width: var(--max-width);
+  min-width: var(--min-width);
+
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 20px;
+  grid-template-areas:
+    'avatar name'
+    'avatar login'
+    'avatar date'
+    'bio bio'
+    'stats stats'
+    'social social';
+  border-radius: 15px;
+  background: var(--just-white);
+  box-shadow: 0px 16px 30px -10px rgba(70, 96, 187, 0.2);
+}
+
+[data-theme='dark'] .section {
+  background: var(--card-background);
+  box-shadow: unset;
+}
+
+.avatar {
+  grid-area: avatar;
+
+  border-radius: 70px;
+}
+
+.name {
+  grid-area: name;
+
+  font-size: 1.6rem;
+}
+
+.login {
+  grid-area: login;
+
+  margin-block-end: 8px;
+
+  font-size: 1.3rem;
+
+  color: var(--blue);
+}
+
+.date {
+  grid-area: date;
+  font-size: 1.3rem;
+  color: var(--greyish-blue);
+}
+
+[data-theme='dark'] .date {
+  color: var(--just-white);
+}
+
+.bio {
+  grid-area: bio;
+
+  margin-block-start: 24px;
+
+  font-size: 1.3rem;
+  line-height: 25px;
+
+  color: var(--p-color);
+}
+
+[data-theme='dark'] .bio {
+  color: var(--just-white);
+}
+
+.stats {
+  margin-block: 24px;
+  padding-block: 18px;
+  padding-inline: 14px;
+
+  grid-area: stats;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  place-items: center;
+
+  border-radius: 10px;
+  background-color: var(--background-color);
+}
+
+.stats > p {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 1.1rem;
+  color: var(--p-color);
+}
+
+[data-theme='dark'] .stats > p {
+  color: var(--just-white);
+}
+
+.stats > p > span {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--h1-color);
+}
+
+.social {
+  grid-area: social;
+  display: grid;
+  grid-template-areas:
+    'location'
+    'website'
+    'twitter'
+    'company';
+  gap: 17px;
+}
+
+.social > div:nth-child(1) {
+  grid-area: location;
+}
+
+.social > div:nth-child(2) {
+  grid-area: website;
+}
+
+.social > div:nth-child(3) {
+  grid-area: twitter;
+}
+
+.social > div:nth-child(4) {
+  grid-area: company;
+}
+
+.social > div {
+  font-size: 1.3rem;
+  color: var(--p-color);
+
+  display: grid;
+  grid-template-columns: 33px 1fr;
+}
+
+.social > div:hover a {
+  text-decoration: underline;
+}
+
+[data-theme='dark'] .social > div {
+  color: var(--just-white);
+}
+
+[data-theme='dark'] .social svg path {
+  fill: var(--just-white);
+}
+
+.section p[data-null='true'] {
+  color: hsla(217, 20%, 51%, 0.7);
+}
+
+.social > div:has(p[data-null='true']) svg path {
+  fill: hsla(217, 20%, 51%, 0.7);
+}
+
+@media screen and (min-width: 500px) {
+  .section {
+    padding: 40px;
+    column-gap: 41px;
+  }
+
+  .avatar {
+    width: 117px;
+    height: 117px;
+  }
+
+  .name {
+    font-size: 2.6rem;
+  }
+
+  .login {
+    margin-block-end: 4px;
+    font-size: 1.6rem;
+  }
+
+  .date {
+    font-size: 1.5rem;
+  }
+
+  .bio {
+    font-size: 1.5rem;
+  }
+
+  .stats {
+    margin-block: 34px;
+    padding-inline: 32px;
+    place-items: start;
+  }
+
+  .stats > p {
+    align-items: start;
+
+    font-size: 1.3rem;
+  }
+
+  .stats > p > span {
+    font-size: 2.2rem;
+  }
+
+  .social {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    grid-template-areas:
+      'location twitter'
+      'website company';
+    gap: 19px;
+  }
+
+  .social > div {
+    font-size: 1.5rem;
+    grid-template-columns: 36px 1fr;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .section {
+    padding: 48px;
+    grid-template-columns: auto 1fr 1fr;
+    column-gap: 47px;
+    grid-template-areas:
+      'avatar name date'
+      'avatar login login'
+      'avatar bio bio'
+      ' . stats stats'
+      ' . social social';
+  }
+
+  .date {
+    align-self: center;
+    justify-self: end;
+  }
+
+  .stats {
+    margin-block: 37px;
+  }
+
+  .social {
+    column-gap: 62px;
+  }
+}
