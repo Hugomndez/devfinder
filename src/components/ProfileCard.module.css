@@ -162,7 +162,7 @@
   fill: hsla(217, 20%, 51%, 0.7);
 }
 
-@media screen and (min-width: 500px) {
+@media screen and (min-width: 515px) {
   .section {
     padding: 40px;
     column-gap: 41px;
