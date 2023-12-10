@@ -1,19 +1,41 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
+import { useRef } from 'react';
+
 import styles from './SearchInput.module.css';
 
-const SearchInput = () => {
+export default function SearchForm() {
+  const ref = useRef<HTMLFormElement>(null);
+  const router = useRouter();
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const query = event.currentTarget.username.value.trim();
+
+    router.push(`/?q=${query}`);
+
+    ref.current?.reset();
+  }
+
   return (
-    <form className={styles.form}>
+    <form
+      ref={ref}
+      onSubmit={handleSubmit}
+      className={styles.form}>
       <input
         type='text'
+        name='username'
         placeholder='Search GitHub username…'
+        autoFocus
+        required
       />
       <SearchIconSVG />
       <button type='submit'>Search</button>
     </form>
   );
-};
-
-export default SearchInput;
+}
 
 function SearchIconSVG() {
   return (

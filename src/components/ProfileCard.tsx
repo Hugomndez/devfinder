@@ -1,12 +1,11 @@
+import getUserData from '@/lib/getUserData';
 import Image from 'next/image';
 import styles from './ProfileCard.module.css';
 
-const API_URL = 'https://api.github.com/users/octocat';
+export default async function ProfileCard({ query }: { query: string }) {
+  const rawData = await getUserData(query);
 
-const ProfileCard = async () => {
-  const data = await getData();
-
-  const d = {
+  const defaultData = {
     login: 'octocat',
     id: 583231,
     node_id: 'MDQ6VXNlcjU4MzIzMQ==',
@@ -40,6 +39,8 @@ const ProfileCard = async () => {
     created_at: '2011-01-25T18:44:36Z',
     updated_at: '2023-11-22T12:17:14Z',
   };
+
+  const data = rawData.message === 'Not Found' ? defaultData : rawData;
 
   return (
     <section className={styles.section}>
@@ -101,9 +102,7 @@ const ProfileCard = async () => {
       </div>
     </section>
   );
-};
-
-export default ProfileCard;
+}
 
 function SocialItem(props: {
   data: string | null;
@@ -208,14 +207,4 @@ function formatDate(date: string) {
   const day = d.getDate();
 
   return `Joined ${day} ${month} ${year}`;
-}
-
-async function getData() {
-  const res = await fetch(API_URL);
-
-  if (!res.ok) {
-    throw new Error('Failed to fetch data');
-  }
-
-  return res.json();
 }

@@ -1,15 +1,21 @@
 import Header from '@/components/Header';
 import ProfileCard from '@/components/ProfileCard';
-import SearchInput from '@/components/SearchInput';
+import SearchForm from '@/components/SearchForm';
 
-export default function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  const query = typeof searchParams.q === 'string' ? searchParams.q : 'octocat';
+
   return (
     <>
       <div>
         <Header />
         <main>
-          <SearchInput />
-          <ProfileCard />
+          <SearchForm />
+          <ProfileCard query={query} />
         </main>
       </div>
     </>
