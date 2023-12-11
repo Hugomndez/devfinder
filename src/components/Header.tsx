@@ -1,4 +1,5 @@
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import styles from './Header.module.css';
 
 const ThemeButton = dynamic(() => import('../components/ThemeButton'), {
@@ -8,7 +9,9 @@ const ThemeButton = dynamic(() => import('../components/ThemeButton'), {
 export default function Header() {
   return (
     <header className={styles.header}>
-      <h1>devfinder</h1>
+      <Link href='/'>
+        <h1>devFinder</h1>
+      </Link>
       <ThemeButton />
     </header>
   );
