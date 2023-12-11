@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useRef } from 'react';
 
-import styles from './SearchInput.module.css';
+import styles from './SearchForm.module.css';
 
 export default function SearchForm() {
   const ref = useRef<HTMLFormElement>(null);
