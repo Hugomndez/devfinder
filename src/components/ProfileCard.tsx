@@ -2,112 +2,75 @@ import getUserData from '@/lib/getUserData';
 import Image from 'next/image';
 import styles from './ProfileCard.module.css';
 
+type UserData = {
+  login: string;
+  avatar_url: string;
+  name: string | null;
+  bio: string | null;
+  company: string | null;
+  blog: string | null;
+  location: string | null;
+  twitter_username: string | null;
+  public_repos: number;
+  followers: number;
+  following: number;
+  created_at: string;
+};
+
 export default async function ProfileCard({ query }: { query: string }) {
-  const rawData = await getUserData(query);
+  const { data: user }: { data: UserData } = await getUserData(query);
 
-  const defaultData = {
-    login: 'octocat',
-    id: 583231,
-    node_id: 'MDQ6VXNlcjU4MzIzMQ==',
-    avatar_url: 'https://avatars.githubusercontent.com/u/583231?v=4',
-    gravatar_id: '',
-    url: 'https://api.github.com/users/octocat',
-    html_url: 'https://github.com/octocat',
-    followers_url: 'https://api.github.com/users/octocat/followers',
-    following_url: 'https://api.github.com/users/octocat/following{/other_user}',
-    gists_url: 'https://api.github.com/users/octocat/gists{/gist_id}',
-    starred_url: 'https://api.github.com/users/octocat/starred{/owner}{/repo}',
-    subscriptions_url: 'https://api.github.com/users/octocat/subscriptions',
-    organizations_url: 'https://api.github.com/users/octocat/orgs',
-    repos_url: 'https://api.github.com/users/octocat/repos',
-    events_url: 'https://api.github.com/users/octocat/events{/privacy}',
-    received_events_url: 'https://api.github.com/users/octocat/received_events',
-    type: 'User',
-    site_admin: false,
-    name: 'The Octocat',
-    company: '@github',
-    blog: 'https://github.blog',
-    location: 'San Francisco',
-    email: null,
-    hireable: null,
-    bio: null,
-    twitter_username: null,
-    public_repos: 8,
-    public_gists: 8,
-    followers: 11316,
-    following: 9,
-    created_at: '2011-01-25T18:44:36Z',
-    updated_at: '2023-11-22T12:17:14Z',
-  };
-
-  const data = rawData.message === 'Not Found' ? defaultData : rawData;
+  const socialData = [
+    { icon: LocIconSVG, data: user.location, social: 'location' },
+    { icon: WebsiteIconSVG, data: user.blog, social: 'website' },
+    { icon: TwitterIconSVG, data: user.twitter_username, social: 'twitter' },
+    { icon: CompanyIconSVG, data: user.company, social: 'company' },
+  ];
 
   return (
     <section className={styles.section}>
       <Image
         className={styles.avatar}
-        src={data.avatar_url}
-        alt={data.name}
+        src={user.avatar_url}
+        alt={getNameOrLogin(user)}
         width={70}
         height={70}
       />
-      <h1 className={styles.name}>{!!data.name ? data.name : data.login}</h1>
-      <span className={styles.login}>{`@${data.login}`}</span>
-      <span className={styles.date}>{formatDate(data.created_at)}</span>
+      <h1 className={styles.name}>{getNameOrLogin(user)}</h1>
+      <span className={styles.login}>{`@${user.login}`}</span>
+      <span className={styles.date}>{formatDate(user.created_at)}</span>
       <p
         className={styles.bio}
-        data-null={!data.bio}>
-        {!!data.bio ? data.bio : 'This profile has no bio.'}
+        data-null={!user.bio}>
+        {user.bio || 'This profile has no bio.'}
       </p>
       <div className={styles.stats}>
         <p>
-          Repos <span>{data.public_repos}</span>
+          Repos <span>{user.public_repos}</span>
         </p>
         <p>
-          Followers <span>{data.followers}</span>
+          Followers <span>{user.followers}</span>
         </p>
         <p>
-          Following <span>{data.following}</span>
+          Following <span>{user.following}</span>
         </p>
       </div>
       <div className={styles.social}>
-        <div>
-          <LocIconSVG />
-          <SocialItem
-            data={data.location}
-            social='location'
-          />
-        </div>
-        <div>
-          <WebsiteIconSVG />
-          <SocialItem
-            data={data.blog}
-            social='website'
-          />
-        </div>
-        <div>
-          <TwitterIconSVG />
-          <SocialItem
-            data={data.twitter_username}
-            social='twitter'
-          />
-        </div>
-        <div>
-          <CompanyIconSVG />
-          <SocialItem
-            data={data.company}
-            social='company'
-          />
-        </div>
+        {socialData.map(({ icon: Icon, data, social }) => (
+          <div key={social}>
+            <Icon />
+            <SocialItem
+              data={data}
+              social={social}
+            />
+          </div>
+        ))}
       </div>
     </section>
   );
 }
 
-function SocialItem(props: {
-  data: string | null;
-  social: 'location' | 'website' | 'twitter' | 'company';
-}) {
+function SocialItem(props: { data: string | null; social: string }) {
   const { data, social } = props;
 
   const url = {
@@ -207,4 +170,8 @@ function formatDate(date: string) {
   const day = d.getDate();
 
   return `Joined ${day} ${month} ${year}`;
+}
+
+function getNameOrLogin(user: { name: string | null; login: string }) {
+  return user.name || user.login;
 }
