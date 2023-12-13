@@ -14,10 +14,10 @@
   font-family: inherit;
   font-size: 1.6rem;
 
-  caret-color: var(--blue);
+  caret-color: var(--color-blue);
   color: var(--h1-color);
 
-  background-color: var(--just-white);
+  background-color: var(--color-white);
 
   border: none;
   border-radius: 15px;
@@ -27,7 +27,7 @@
 
 [data-theme='dark'] .form input[type='text'] {
   background-color: var(--card-background);
-  color: var(--just-white);
+  color: var(--color-white);
 
   box-shadow: unset;
 }
@@ -39,7 +39,7 @@
 }
 
 [data-theme='dark'] .form input[type='text']::placeholder {
-  color: var(--just-white);
+  color: var(--color-white);
 }
 
 .form svg {
@@ -49,7 +49,22 @@
   transform: translateY(-50%);
 }
 
+.form .error {
+  position: absolute;
+  top: 50%;
+  right: 100px;
+  transform: translateY(-50%);
+
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-red);
+}
+
 .form button[type='submit'] {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   position: absolute;
   top: 50%;
   right: 7px;
@@ -60,11 +75,11 @@
 
   font-family: inherit;
   font-size: 1.4rem;
-  font-weight: var(--FW-Primary);
+  font-weight: var(--font-weight-primary);
 
-  color: var(--just-white);
+  color: var(--color-white);
 
-  background-color: var(--blue);
+  background-color: var(--color-blue);
 
   border-radius: 10px;
   border: none;
@@ -73,6 +88,30 @@
 
 .form button[type='submit']:hover {
   background-color: hsla(212, 100%, 69%, 1);
+}
+
+.form button[type='submit']:disabled {
+  background-color: hsla(212, 100%, 69%, 0.5);
+  cursor: not-allowed;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  z-index: 1;
+  border: 2px solid hsla(212, 100%, 69%, 0.5);
+  border-top: 2px solid var(--color-white);
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  animation: spin 1s linear infinite;
 }
 
 @media screen and (min-width: 515px) {
@@ -95,6 +134,12 @@
 
   .form svg {
     left: 32px;
+  }
+
+  .form .error {
+    right: 130px;
+
+    font-size: 1.6rem;
   }
 
   .form button[type='submit'] {

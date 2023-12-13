@@ -1,27 +1,47 @@
 'use client';
 
+import getUserData from '@/lib/getUserData';
 import { useRouter } from 'next/navigation';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 import styles from './SearchForm.module.css';
 
 export default function SearchForm() {
-  const ref = useRef<HTMLFormElement>(null);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const query = event.currentTarget.username.value.trim();
+    const encodedQuery = encodeURIComponent(query);
 
-    router.push(`/?q=${query}`);
+    setIsLoading(true);
 
-    ref.current?.reset();
+    router.push(`/?q=${encodedQuery}`);
+
+    const { notFound, rateLimited } = await getUserData(query);
+
+    setIsLoading(false);
+
+    if (notFound) {
+      setErrorMessage('No results');
+      return;
+    }
+    if (rateLimited) {
+      setErrorMessage('Rate limited');
+      return;
+    }
+
+    setErrorMessage('');
+    formRef.current?.reset();
   }
 
   return (
     <form
-      ref={ref}
+      ref={formRef}
       onSubmit={handleSubmit}
       className={styles.form}>
       <input
@@ -32,7 +52,12 @@ export default function SearchForm() {
         required
       />
       <SearchIconSVG />
-      <button type='submit'>Search</button>
+      {errorMessage && <span className={styles.error}>{errorMessage}</span>}
+      <button
+        type='submit'
+        disabled={isLoading}>
+        {isLoading ? <div className={styles.spinner} /> : 'Search'}
+      </button>
     </form>
   );
 }
