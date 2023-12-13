@@ -12,13 +12,13 @@
   line-height: normal;
   letter-spacing: 2.5px;
 
-  color: var(--greyish-blue);
+  color: var(--color-greyish-blue);
 
   cursor: pointer;
 }
 
 [data-theme='dark'] .button {
-  color: var(--just-white);
+  color: var(--color-white);
 }
 
 @media (hover: hover) {
@@ -31,10 +31,10 @@
   }
 
   [data-theme='dark'] .button:hover {
-    color: var(--greyish-blue);
+    color: var(--color-greyish-blue);
   }
 
   .button:hover svg g path {
-    fill: var(--greyish-blue);
+    fill: var(--color-greyish-blue);
   }
 }

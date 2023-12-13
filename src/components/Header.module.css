@@ -1,10 +1,10 @@
 .header {
+  display: flex;
+  justify-content: space-between;
+
   width: 100%;
   max-width: var(--max-width);
   min-width: var(--min-width);
-
-  display: flex;
-  justify-content: space-between;
 
   margin-block-end: 36px;
 }

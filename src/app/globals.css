@@ -4,17 +4,18 @@
   --max-width: 730px;
   --min-width: 320px;
 
-  --just-white: hsl(0, 0%, 100%);
-  --greyish-blue: hsl(217, 20%, 51%);
-  --blue: hsla(212, 100%, 50%, 1);
+  --color-white: hsl(0, 0%, 100%);
+  --color-greyish-blue: hsl(217, 20%, 51%);
+  --color-blue: hsla(212, 100%, 50%, 1);
+  --color-red: hsla(0, 91%, 62%, 1);
 
   --background-color: hsl(227, 100%, 98%);
   --h1-color: hsl(217, 21%, 21%);
   --p-color: hsla(217, 35%, 45%, 1);
 
-  --FF: 'Space Mono';
-  --FW-Primary: 700;
-  --FW-Secondary: 400;
+  --font-family: 'Space Mono';
+  --font-weight-primary: 700;
+  --font-weight-secondary: 400;
 }
 
 [data-theme='dark'] {
@@ -22,7 +23,7 @@
 
   --background-color: hsl(220, 40%, 13%);
   --card-background: hsl(222, 41%, 20%);
-  --h1-color: var(--just-white);
+  --h1-color: var(--color-white);
 }
 
 *,
@@ -43,8 +44,8 @@ body {
   width: 100%;
   height: 100vh;
 
-  font-family: var(--FF);
-  font-weight: var(--FW-Secondary);
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-secondary);
   font-size: 1.5rem;
   line-height: normal;
   font-style: normal;
@@ -80,14 +81,14 @@ img {
 
 h1,
 h2 {
-  font-weight: var(--FW-Primary);
+  font-weight: var(--font-weight-primary);
 }
 
 h3,
 h4,
 h5,
 h6 {
-  font-weight: var(--FW-Secondary);
+  font-weight: var(--font-weight-secondary);
 }
 
 h1 {
