@@ -1,22 +1,7 @@
-const API_URL = 'https://api.github.com/users/';
-const NOT_FOUND = 'Not Found';
-const RATE_LIMITED = 'API rate limit exceeded';
-const DEFAULT_DATA = {
-  login: 'octocat',
-  avatar_url: 'https://avatars.githubusercontent.com/u/583231?v=4',
-  name: 'The Octocat',
-  company: '@github',
-  blog: 'https://github.blog',
-  location: 'San Francisco',
-  bio: null,
-  twitter_username: null,
-  public_repos: 8,
-  followers: 11316,
-  following: 9,
-  created_at: '2011-01-25T18:44:36Z',
-};
+import { type GetUserResponse } from '@/types';
+import { API_URL, DEFAULT_DATA, NOT_FOUND, RATE_LIMITED } from './constants';
 
-export default async function getUserData(username: string) {
+export default async function getUserData(username: string): Promise<GetUserResponse> {
   try {
     const res = await fetch(`${API_URL}${username}`);
     const rawData = await res.json();
