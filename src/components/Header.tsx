@@ -10,7 +10,7 @@ export default function Header() {
   return (
     <header className={styles.header}>
       <Link href='/'>
-        <h1>devFinder</h1>
+        <h1 aria-label='devFinder Home'>devFinder</h1>
       </Link>
       <ThemeButton />
     </header>
