@@ -34,6 +34,15 @@
   padding: 0;
 }
 
+* {
+  transition-property: color, background-color, border-color, fill;
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
+
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-blue) var(--background-color);
+}
+
 html {
   box-sizing: border-box;
   font-size: 62.5%;
