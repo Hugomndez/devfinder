@@ -6,7 +6,7 @@
   min-width: var(--min-width);
 
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto minmax(0, 1fr);
   column-gap: 20px;
   grid-template-areas:
     'avatar name'
@@ -79,7 +79,7 @@
 
   grid-area: stats;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   place-items: center;
 
   border-radius: 10px;
@@ -210,15 +210,6 @@
     font-size: 2.2rem;
   }
 
-  .social {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto;
-    grid-template-areas:
-      'location twitter'
-      'website company';
-    gap: 19px;
-  }
-
   .social > div {
     font-size: 1.5rem;
     grid-template-columns: 36px 1fr;
@@ -227,8 +218,9 @@
 
 @media screen and (min-width: 768px) {
   .section {
+    width: calc(100vw - 96px);
     padding: 48px;
-    grid-template-columns: auto 1fr 1fr;
+    grid-template-columns: auto repeat(2, minmax(0, 1fr));
     column-gap: 47px;
     grid-template-areas:
       'avatar name date'
@@ -248,6 +240,12 @@
   }
 
   .social {
-    column-gap: 62px;
+    grid-template-columns: subgrid;
+    grid-template-rows: auto;
+    grid-template-areas:
+      'location twitter'
+      'website company';
+    column-gap: inherit;
+    row-gap: 20px;
   }
 }

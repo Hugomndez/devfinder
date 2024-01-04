@@ -56,7 +56,7 @@ body {
   -webkit-text-size-adjust: 100%;
 
   padding-block-start: 31px;
-  padding-inline: 24px;
+  padding-inline: 20px;
 
   background-color: var(--background-color);
 }
