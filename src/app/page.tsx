@@ -3,18 +3,22 @@ import ProfileCard from '@/components/ProfileCard';
 import SearchForm from '@/components/SearchForm';
 import { Metadata } from 'next';
 
-type Props = {
-  searchParams: { [key: string]: string | string[] | undefined };
+type GenerateMetadataProps = {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export async function generateMetadata({ searchParams: { q } }: Props): Promise<Metadata> {
+export async function generateMetadata(props: GenerateMetadataProps): Promise<Metadata> {
+  const { q: _query } = await props.searchParams;
+
   return {
-    title: q ? `${q} | devFinder` : 'devFinder',
+    title: _query ? `${_query} | devFinder` : 'devFinder',
   };
 }
 
-export default async function Home({ searchParams: { q } }: Props) {
-  const query = typeof q === 'string' ? q : 'octocat';
+export default async function Home(props: GenerateMetadataProps) {
+  const { q: _query } = await props.searchParams;
+
+  const query = typeof _query === 'string' ? _query : 'octocat';
 
   return (
     <>

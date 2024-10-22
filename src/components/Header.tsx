@@ -1,10 +1,6 @@
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import styles from './Header.module.css';
-
-const ThemeButton = dynamic(() => import('../components/ThemeButton'), {
-  ssr: false,
-});
+import ThemeButton from './ThemeButton';
 
 export default function Header() {
   return (
