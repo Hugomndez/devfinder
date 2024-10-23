@@ -14,6 +14,10 @@ const compat = new FlatCompat({
 });
 
 /** @type {import('eslint').Linter.Config[]} */
-const config = [...compat.extends('next/core-web-vitals'), { ignores: ['.next/*'] }];
+const config = [
+  ...compat.extends('next/core-web-vitals'),
+  ...compat.plugins('eslint-plugin-react-compiler'),
+  { ignores: ['.next/*'] },
+];
 
 export default config;
