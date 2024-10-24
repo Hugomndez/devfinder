@@ -3,7 +3,7 @@ import { API_URL, DEFAULT_DATA, NOT_FOUND, RATE_LIMITED } from './constants';
 
 export default async function getUserData(username: string): Promise<GetUserResponse> {
   try {
-    const res = await fetch(`${API_URL}${username}`);
+    const res = await fetch(`${API_URL}${username}`, { cache: 'force-cache' });
     const rawData = await res.json();
 
     if (rawData.message === NOT_FOUND) {
