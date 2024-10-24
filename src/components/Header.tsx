@@ -1,7 +1,11 @@
+'use client';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { Suspense } from 'react';
 import styles from './Header.module.css';
-import ThemeToggle from './theme-toggle';
+
+const ThemeToggle = dynamic(() => import('./theme-toggle'), {
+  ssr: false,
+});
 
 export default function Header() {
   return (
@@ -9,9 +13,7 @@ export default function Header() {
       <Link href='/'>
         <h1 aria-label='devFinder Home'>devFinder</h1>
       </Link>
-      <Suspense fallback={null}>
-        <ThemeToggle />
-      </Suspense>
+      <ThemeToggle />
     </header>
   );
 }

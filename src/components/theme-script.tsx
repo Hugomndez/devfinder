@@ -43,5 +43,10 @@ function code() {
 }
 
 export default function ThemeScript() {
-  return <script dangerouslySetInnerHTML={{ __html: `(${code})();` }} />;
+  return (
+    <script
+      id='theme-script'
+      dangerouslySetInnerHTML={{ __html: `(${code})();` }}
+    />
+  );
 }
