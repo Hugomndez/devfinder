@@ -18,7 +18,7 @@
 }
 
 [data-theme='dark'] .button {
-  color: var(--color-white);
+  color: var(--color-greyish-blue);
 }
 
 @media (hover: hover) {
@@ -26,15 +26,15 @@
     color: var(--h1-color);
   }
 
-  .button:hover svg path {
+  .button:hover svg g path {
     fill: var(--h1-color);
   }
 
   [data-theme='dark'] .button:hover {
-    color: var(--color-greyish-blue);
+    color: var(--color-white);
   }
 
-  .button:hover svg g path {
-    fill: var(--color-greyish-blue);
+  .button:hover svg path {
+    fill: var(--color-white);
   }
 }

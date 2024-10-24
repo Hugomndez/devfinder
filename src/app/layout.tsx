@@ -1,5 +1,5 @@
+import ThemeScript from '@/components/theme-script';
 import { SpaceMono } from '@/fonts';
-import { getTheme } from '@/lib/getTheme';
 import type { Metadata } from 'next';
 import './globals.css';
 
@@ -14,7 +14,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang='en'
       dir='ltr'>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: getTheme }} />
+        <ThemeScript />
       </head>
       <body className={SpaceMono.className}>{children}</body>
     </html>
