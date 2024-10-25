@@ -1,6 +1,6 @@
 import Header from '@/components/Header';
 import ProfileCard from '@/components/ProfileCard';
-import SearchForm from '@/components/SearchForm';
+import SearchForm from '@/components/search-form';
 import { Metadata } from 'next';
 
 type GenerateMetadataProps = {
