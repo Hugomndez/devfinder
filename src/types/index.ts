@@ -1,4 +1,4 @@
-export type UserData = {
+export type UserDTO = {
   login: string;
   avatar_url: string;
   name: string | null;
@@ -14,8 +14,14 @@ export type UserData = {
 };
 
 export type GetUserResponse = {
-  data: UserData;
+  data: UserDTO;
   notFound: boolean;
   rateLimited: boolean;
   error?: string;
+};
+
+export type ServerState = {
+  status: 'initial' | 'success' | 'error';
+  message: string;
+  data: { username: string };
 };

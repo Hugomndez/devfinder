@@ -6,6 +6,8 @@ import styles from './ProfileCard.module.css';
 export default async function ProfileCard({ query }: { query: string }) {
   const { data: user } = await getUserData(query);
 
+  const displayName = user.name || user.login;
+
   const socialData = [
     { icon: LocIconSVG, data: user.location, social: 'location' },
     { icon: WebsiteIconSVG, data: user.blog, social: 'website' },
@@ -18,11 +20,12 @@ export default async function ProfileCard({ query }: { query: string }) {
       <Image
         className={styles.avatar}
         src={user.avatar_url}
-        alt={getNameOrLogin(user)}
+        alt={`${displayName}'s avatar`}
         width={70}
         height={70}
+        priority
       />
-      <h1 className={styles.name}>{getNameOrLogin(user)}</h1>
+      <h1 className={styles.name}>{displayName}</h1>
       <span className={styles.login}>{`@${user.login}`}</span>
       <span className={styles.date}>{formatDate(user.created_at)}</span>
       <p
@@ -156,8 +159,4 @@ function formatDate(date: string) {
   const day = d.getDate();
 
   return `Joined ${day} ${month} ${year}`;
-}
-
-function getNameOrLogin(user: { name: string | null; login: string }) {
-  return user.name || user.login;
 }
