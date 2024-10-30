@@ -13,10 +13,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang='en'
       dir='ltr'>
-      <head>
+      <body className={SpaceMono.className}>
         <ThemeScript />
-      </head>
-      <body className={SpaceMono.className}>{children}</body>
+        {children}
+      </body>
     </html>
   );
 }
