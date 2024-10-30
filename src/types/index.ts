@@ -1,4 +1,4 @@
-export type UserDTO = {
+export type UserProfile = {
   login: string;
   avatar_url: string;
   name: string | null;
@@ -13,15 +13,8 @@ export type UserDTO = {
   created_at: string;
 };
 
-export type GetUserResponse = {
-  data: UserDTO;
-  notFound: boolean;
-  rateLimited: boolean;
-  error?: string;
-};
-
-export type ServerState = {
-  status: 'initial' | 'success' | 'error';
-  message: string;
-  data: { username: string };
+export type UserDataResponse = {
+  data: UserProfile;
+  error: boolean;
+  message?: string;
 };

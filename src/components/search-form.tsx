@@ -1,67 +1,40 @@
 'use client';
 
-import { ServerState } from '@/types';
 import { useRouter } from 'next/navigation';
-import { useActionState, useEffect, useState } from 'react';
-import userAction from './actions';
 import styles from './search-form.module.css';
 
-const initialState: ServerState = {
-  status: 'initial',
-  message: '',
-  data: { username: '' },
+type SearchFormProps = {
+  error: boolean;
+  message?: string;
 };
-
-export default function SearchForm() {
-  const [serverState, formAction, isPending] = useActionState(userAction, initialState);
-  const [formState, setFormState] = useState(serverState);
+export default function SearchForm(props: SearchFormProps) {
   const router = useRouter();
 
-  useEffect(() => {
-    const encodedQuery = encodeURIComponent(serverState.data.username);
-    const handleStatus: { [key: string]: () => void } = {
-      success: () => {
-        setFormState(initialState);
-        router.push(`/?q=${encodedQuery}`);
-      },
-      error: () => {
-        setFormState(serverState);
-        router.push(`/?q=${encodedQuery}`);
-      },
-      default: () => {
-        setFormState(serverState);
-      },
-    };
-    (handleStatus[serverState.status] || handleStatus.default)();
-  }, [serverState, router]);
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const { value } = event.currentTarget.username;
+    const encodedQuery = encodeURIComponent(value);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setFormState({
-      ...formState,
-      data: { ...formState.data, [name]: value },
-    });
+    router.push(`/?q=${encodedQuery}`);
   };
 
   return (
     <form
       className={styles.form}
-      action={formAction}>
+      onSubmit={handleSubmit}>
       <input
         type='text'
         name='username'
-        value={formState.data.username}
-        onChange={handleChange}
         placeholder='Search GitHub username…'
         autoFocus
         required
       />
       <SearchIconSVG />
-      {formState.status === 'error' && <span className={styles.error}>{formState.message}</span>}
+      {props.error && <span className={styles.error}>{props.message}</span>}
       <button
         type='submit'
-        disabled={isPending}>
-        {isPending ? <div className={styles.spinner} /> : 'Search'}
+        disabled={false}>
+        {false ? <div className={styles.spinner} /> : 'Search'}
       </button>
     </form>
   );

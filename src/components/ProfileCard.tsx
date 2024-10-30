@@ -1,47 +1,62 @@
-import getUserData from '@/lib/getUserData';
 import Image from 'next/image';
 
+import { UserProfile } from '@/types';
 import styles from './ProfileCard.module.css';
+type ProfileCardProps = {
+  data: UserProfile;
+};
+export default async function ProfileCard(props: ProfileCardProps) {
+  const {
+    name,
+    login,
+    avatar_url,
+    created_at,
+    bio,
+    public_repos,
+    followers,
+    following,
+    location,
+    blog,
+    twitter_username,
+    company,
+  } = props.data;
 
-export default async function ProfileCard({ query }: { query: string }) {
-  const { data: user } = await getUserData(query);
-
-  const displayName = user.name || user.login;
+  const displayName = name || login;
 
   const socialData = [
-    { icon: LocIconSVG, data: user.location, social: 'location' },
-    { icon: WebsiteIconSVG, data: user.blog, social: 'website' },
-    { icon: TwitterIconSVG, data: user.twitter_username, social: 'twitter' },
-    { icon: CompanyIconSVG, data: user.company, social: 'company' },
+    { icon: LocIconSVG, data: location, social: 'location' },
+    { icon: WebsiteIconSVG, data: blog, social: 'website' },
+    { icon: TwitterIconSVG, data: twitter_username, social: 'twitter' },
+    { icon: CompanyIconSVG, data: company, social: 'company' },
   ];
 
   return (
     <section className={styles.section}>
       <Image
         className={styles.avatar}
-        src={user.avatar_url}
+        src={avatar_url}
         alt={`${displayName}'s avatar`}
         width={70}
         height={70}
         priority
       />
       <h1 className={styles.name}>{displayName}</h1>
-      <span className={styles.login}>{`@${user.login}`}</span>
-      <span className={styles.date}>{formatDate(user.created_at)}</span>
+      <span className={styles.login}>{`@${login}`}</span>
+      <span className={styles.date}>{formatDate(created_at)}</span>
       <p
         className={styles.bio}
-        data-null={!user.bio}>
-        {user.bio || 'This profile has no bio.'}
+        data-null={!bio}>
+        {bio || 'This profile has no bio.'}
       </p>
       <div className={styles.stats}>
         <p>
-          Repos <span>{user.public_repos}</span>
+          Repos <span>{public_repos}</span>
         </p>
         <p>
-          Followers <span>{user.followers}</span>
+          Followers <span>{followers}</span>
         </p>
         <p>
-          Following <span>{user.following}</span>
+          Following <span>{following}</span>
         </p>
       </div>
       <div className={styles.social}>

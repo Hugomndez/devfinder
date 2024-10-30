@@ -1,26 +1,22 @@
-import type { GetUserResponse, UserDTO } from '@/types';
+import type { UserDataResponse, UserProfile } from '@/types';
+import 'server-only';
 import { API_URL, DEFAULT_DATA, RATE_LIMITED } from './constants';
 
-export default async function getUserData(username: string): Promise<GetUserResponse> {
+export default async function getUserData(username: string): Promise<UserDataResponse> {
   try {
     const res = await fetch(`${API_URL}${username}`, { cache: 'force-cache' });
 
     if (res.status === 404) {
-      return { data: DEFAULT_DATA, notFound: true, rateLimited: false };
+      return { data: DEFAULT_DATA, error: true, message: 'Not Found' };
     }
+
     if (res.status === 429 || res.statusText.includes(RATE_LIMITED)) {
-      return { data: DEFAULT_DATA, notFound: false, rateLimited: true };
+      return { data: DEFAULT_DATA, error: true, message: 'Rate Limited' };
     }
 
     const rawData = await res.json();
 
-    // if (rawData.message === NOT_FOUND) {
-    //   return { data: DEFAULT_DATA, notFound: true, rateLimited: false };
-    // } else if (rawData.message && rawData.message.includes(RATE_LIMITED)) {
-    //   return { data: DEFAULT_DATA, notFound: false, rateLimited: true };
-    // }
-
-    const userData: UserDTO = {
+    const userData: UserProfile = {
       login: rawData.login,
       avatar_url: rawData.avatar_url,
       name: rawData.name,
@@ -35,13 +31,12 @@ export default async function getUserData(username: string): Promise<GetUserResp
       created_at: rawData.created_at,
     };
 
-    return { data: userData, notFound: false, rateLimited: false };
+    return { data: userData, error: false };
   } catch (error) {
     return {
       data: DEFAULT_DATA,
-      error: (error as Error).message,
-      notFound: false,
-      rateLimited: false,
+      error: true,
+      message: (error as Error).message,
     };
   }
 }
