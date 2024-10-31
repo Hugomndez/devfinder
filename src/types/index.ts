@@ -15,6 +15,6 @@ export type UserProfile = {
 
 export type UserDataResponse = {
   data: UserProfile;
-  error: boolean;
+  isError: boolean;
   message?: string;
 };

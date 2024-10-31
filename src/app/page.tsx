@@ -18,10 +18,9 @@ export async function generateMetadata(props: GenerateMetadataProps): Promise<Me
 
 export default async function Home(props: GenerateMetadataProps) {
   const { q: _query } = await props.searchParams;
-
   const query = typeof _query === 'string' ? _query : 'octocat';
 
-  const { data, error, message } = await getUserData(query);
+  const { data, isError, message } = await getUserData(query);
 
   return (
     <>
@@ -29,7 +28,7 @@ export default async function Home(props: GenerateMetadataProps) {
         <Header />
         <main>
           <SearchForm
-            error={error}
+            isError={isError}
             message={message}
           />
           <ProfileCard data={data} />

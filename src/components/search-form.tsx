@@ -1,22 +1,34 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import type { ChangeEvent, FormEvent } from 'react';
+import { useState } from 'react';
 import styles from './search-form.module.css';
 
 type SearchFormProps = {
-  error: boolean;
+  isError: boolean;
   message?: string;
 };
+
+const initialState = { username: '' };
+
 export default function SearchForm(props: SearchFormProps) {
+  const [formState, setFormState] = useState(initialState);
   const router = useRouter();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const { value } = event.currentTarget.username;
-    const encodedQuery = encodeURIComponent(value);
-
+    const encodedQuery = encodeURIComponent(formState.username);
+    setFormState(initialState);
     router.push(`/?q=${encodedQuery}`);
   };
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.currentTarget;
+    setFormState((prev) => ({ ...prev, [name]: value.trim() }));
+  };
+
+  //Todo: Add loading state.
 
   return (
     <form
@@ -25,12 +37,14 @@ export default function SearchForm(props: SearchFormProps) {
       <input
         type='text'
         name='username'
+        value={formState.username}
+        onChange={handleChange}
         placeholder='Search GitHub username…'
         autoFocus
         required
       />
       <SearchIconSVG />
-      {props.error && <span className={styles.error}>{props.message}</span>}
+      {props.isError && <span className={styles.error}>{props.message}</span>}
       <button
         type='submit'
         disabled={false}>

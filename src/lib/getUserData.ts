@@ -1,17 +1,18 @@
-import type { UserDataResponse, UserProfile } from '@/types';
 import 'server-only';
-import { API_URL, DEFAULT_DATA, RATE_LIMITED } from './constants';
+
+import type { UserDataResponse, UserProfile } from '@/types';
+import { API_URL, DEFAULT_DATA } from './constants';
 
 export default async function getUserData(username: string): Promise<UserDataResponse> {
   try {
-    const res = await fetch(`${API_URL}${username}`, { cache: 'force-cache' });
+    const res = await fetch(`${API_URL}${username}`);
 
     if (res.status === 404) {
-      return { data: DEFAULT_DATA, error: true, message: 'Not Found' };
+      return { data: DEFAULT_DATA, isError: true, message: 'Not Found' };
     }
 
-    if (res.status === 429 || res.statusText.includes(RATE_LIMITED)) {
-      return { data: DEFAULT_DATA, error: true, message: 'Rate Limited' };
+    if (res.status === 403 && res.headers.get('X-RateLimit-Remaining') === '0') {
+      return { data: DEFAULT_DATA, isError: true, message: 'Rate Limited' };
     }
 
     const rawData = await res.json();
@@ -31,12 +32,12 @@ export default async function getUserData(username: string): Promise<UserDataRes
       created_at: rawData.created_at,
     };
 
-    return { data: userData, error: false };
+    return { data: userData, isError: false };
   } catch (error) {
     return {
       data: DEFAULT_DATA,
-      error: true,
-      message: (error as Error).message,
+      isError: true,
+      message: 'Please try again',
     };
   }
 }
