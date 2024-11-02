@@ -1,54 +1,64 @@
 'use client';
 
+import type { ServerState } from '@/types';
 import { useRouter } from 'next/navigation';
-import type { ChangeEvent, FormEvent } from 'react';
-import { useState } from 'react';
+import type { ChangeEvent } from 'react';
+import { useActionState, useEffect, useState } from 'react';
+import { searchUserAction } from './actions';
 import styles from './search-form.module.css';
 
-type SearchFormProps = {
-  isError: boolean;
-  message?: string;
-};
+const initialState: ServerState = { state: 'initial', data: { username: '' } };
 
-const initialState = { username: '' };
-
-export default function SearchForm(props: SearchFormProps) {
-  const [formState, setFormState] = useState(initialState);
+export default function SearchForm() {
+  const [serverState, formAction, isLoading] = useActionState(searchUserAction, initialState);
+  const [formState, setFormState] = useState<ServerState>(serverState);
   const router = useRouter();
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const encodedQuery = encodeURIComponent(formState.username);
-    setFormState(initialState);
-    router.push(`/?q=${encodedQuery}`);
-  };
+  useEffect(() => {
+    const redirectToQuery = () => {
+      const encodedQuery = encodeURIComponent(serverState.data.username);
+      router.push(`/?q=${encodedQuery}`);
+    };
+
+    switch (serverState.state) {
+      case 'success':
+        setFormState(initialState);
+        redirectToQuery();
+        break;
+      case 'error':
+        setFormState(serverState);
+        redirectToQuery();
+        break;
+      default:
+        setFormState(serverState);
+        break;
+    }
+  }, [serverState, router]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.currentTarget;
-    setFormState((prev) => ({ ...prev, [name]: value.trim() }));
+    setFormState((prev) => ({ ...prev, data: { ...prev.data, [name]: value.trim() } }));
   };
-
-  //Todo: Add loading state.
 
   return (
     <form
       className={styles.form}
-      onSubmit={handleSubmit}>
+      action={formAction}>
       <input
         type='text'
         name='username'
-        value={formState.username}
+        value={formState.data.username}
         onChange={handleChange}
         placeholder='Search GitHub username…'
         autoFocus
         required
       />
       <SearchIconSVG />
-      {props.isError && <span className={styles.error}>{props.message}</span>}
+      {formState.state === 'error' && <span className={styles.error}>{formState.message}</span>}
       <button
         type='submit'
-        disabled={false}>
-        {false ? <div className={styles.spinner} /> : 'Search'}
+        disabled={isLoading}>
+        {isLoading ? <div className={styles.spinner} /> : 'Search'}
       </button>
     </form>
   );

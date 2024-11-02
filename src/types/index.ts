@@ -14,7 +14,24 @@ export type UserProfile = {
 };
 
 export type UserDataResponse = {
+  status: 'success' | 'error';
   data: UserProfile;
-  isError: boolean;
-  message?: string;
+} & ({ status: 'success' } | { status: 'error'; message: string });
+
+export type ServerState = {
+  state: 'initial' | 'success' | 'error';
+  data: { username: string };
+} & (InitialState | SuccessState | ErrorState);
+
+type InitialState = {
+  state: 'initial';
+};
+
+type SuccessState = {
+  state: 'success';
+};
+
+type ErrorState = {
+  state: 'error';
+  message: string;
 };

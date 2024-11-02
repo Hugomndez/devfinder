@@ -1,7 +1,6 @@
 import Header from '@/components/Header';
 import ProfileCard from '@/components/ProfileCard';
 import SearchForm from '@/components/search-form';
-import getUserData from '@/lib/getUserData';
 import { Metadata } from 'next';
 
 type GenerateMetadataProps = {
@@ -20,18 +19,13 @@ export default async function Home(props: GenerateMetadataProps) {
   const { q: _query } = await props.searchParams;
   const query = typeof _query === 'string' ? _query : 'octocat';
 
-  const { data, isError, message } = await getUserData(query);
-
   return (
     <>
       <div>
         <Header />
         <main>
-          <SearchForm
-            isError={isError}
-            message={message}
-          />
-          <ProfileCard data={data} />
+          <SearchForm />
+          <ProfileCard query={query} />
         </main>
       </div>
     </>

@@ -1,62 +1,49 @@
+import getUserData from '@/lib/getUserData';
 import Image from 'next/image';
-
-import { UserProfile } from '@/types';
 import styles from './ProfileCard.module.css';
+
 type ProfileCardProps = {
-  data: UserProfile;
+  query: string;
 };
 export default async function ProfileCard(props: ProfileCardProps) {
-  const {
-    name,
-    login,
-    avatar_url,
-    created_at,
-    bio,
-    public_repos,
-    followers,
-    following,
-    location,
-    blog,
-    twitter_username,
-    company,
-  } = props.data;
+  const { data } = await getUserData(props.query);
 
-  const displayName = name || login;
+  const displayName = data.name || data.login;
 
   const socialData = [
-    { icon: LocIconSVG, data: location, social: 'location' },
-    { icon: WebsiteIconSVG, data: blog, social: 'website' },
-    { icon: TwitterIconSVG, data: twitter_username, social: 'twitter' },
-    { icon: CompanyIconSVG, data: company, social: 'company' },
+    { icon: LocIconSVG, data: data.location, social: 'location' },
+    { icon: WebsiteIconSVG, data: data.blog, social: 'website' },
+    { icon: TwitterIconSVG, data: data.twitter_username, social: 'twitter' },
+    { icon: CompanyIconSVG, data: data.company, social: 'company' },
   ];
 
   return (
     <section className={styles.section}>
       <Image
         className={styles.avatar}
-        src={avatar_url}
+        src={data.avatar_url}
         alt={`${displayName}'s avatar`}
         width={70}
         height={70}
         priority
       />
       <h1 className={styles.name}>{displayName}</h1>
-      <span className={styles.login}>{`@${login}`}</span>
-      <span className={styles.date}>{formatDate(created_at)}</span>
+      <span className={styles.login}>{`@${data.login}`}</span>
+      <span className={styles.date}>{formatDate(data.created_at)}</span>
       <p
         className={styles.bio}
-        data-null={!bio}>
-        {bio || 'This profile has no bio.'}
+        data-null={!data.bio}>
+        {data.bio || 'This profile has no bio.'}
       </p>
       <div className={styles.stats}>
         <p>
-          Repos <span>{public_repos}</span>
+          Repos <span>{data.public_repos}</span>
         </p>
         <p>
-          Followers <span>{followers}</span>
+          Followers <span>{data.followers}</span>
         </p>
         <p>
-          Following <span>{following}</span>
+          Following <span>{data.following}</span>
         </p>
       </div>
       <div className={styles.social}>

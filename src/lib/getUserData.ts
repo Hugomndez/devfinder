@@ -1,5 +1,3 @@
-import 'server-only';
-
 import type { UserDataResponse, UserProfile } from '@/types';
 import { API_URL, DEFAULT_DATA } from './constants';
 
@@ -8,11 +6,11 @@ export default async function getUserData(username: string): Promise<UserDataRes
     const res = await fetch(`${API_URL}${username}`);
 
     if (res.status === 404) {
-      return { data: DEFAULT_DATA, isError: true, message: 'Not Found' };
+      return { status: 'error', data: DEFAULT_DATA, message: 'Not Found' };
     }
 
     if (res.status === 403 && res.headers.get('X-RateLimit-Remaining') === '0') {
-      return { data: DEFAULT_DATA, isError: true, message: 'Rate Limited' };
+      return { status: 'error', data: DEFAULT_DATA, message: 'Rate Limited' };
     }
 
     const rawData = await res.json();
@@ -32,11 +30,11 @@ export default async function getUserData(username: string): Promise<UserDataRes
       created_at: rawData.created_at,
     };
 
-    return { data: userData, isError: false };
+    return { status: 'success', data: userData };
   } catch (error) {
     return {
+      status: 'error',
       data: DEFAULT_DATA,
-      isError: true,
       message: 'Please try again',
     };
   }
