@@ -1,4 +1,4 @@
-'user server';
+'use server';
 
 import getUserData from '@/lib/getUserData';
 import type { ServerState } from '@/types';

@@ -1,3 +1,5 @@
+import 'server-only';
+
 import type { UserDataResponse, UserProfile } from '@/types';
 import { API_URL, DEFAULT_DATA } from './constants';
 
