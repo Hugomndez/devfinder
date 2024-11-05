@@ -3,7 +3,7 @@
 import type { ServerState } from '@/types';
 import { useRouter } from 'next/navigation';
 import type { ChangeEvent } from 'react';
-import { useActionState, useEffect, useState } from 'react';
+import { useActionState, useCallback, useEffect, useState } from 'react';
 import { searchUserAction } from './actions';
 import styles from './search-form.module.css';
 
@@ -14,31 +14,31 @@ export default function SearchForm() {
   const [formState, setFormState] = useState<ServerState>(serverState);
   const router = useRouter();
 
-  useEffect(() => {
-    const redirectToQuery = () => {
-      const encodedQuery = encodeURIComponent(serverState.data.username);
-      router.push(`/?q=${encodedQuery}`);
-    };
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.currentTarget;
+    setFormState((prev) => ({ ...prev, data: { ...prev.data, [name]: value.trim() } }));
+  };
 
+  const navigateToSearch = useCallback(() => {
+    const encodedQuery = encodeURIComponent(serverState.data.username);
+    router.push(`/?q=${encodedQuery}`);
+  }, [serverState.data.username, router]);
+
+  useEffect(() => {
     switch (serverState.state) {
       case 'success':
         setFormState(initialState);
-        redirectToQuery();
+        navigateToSearch();
         break;
       case 'error':
         setFormState(serverState);
-        redirectToQuery();
+        navigateToSearch();
         break;
       default:
         setFormState(serverState);
         break;
     }
-  }, [serverState, router]);
-
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.currentTarget;
-    setFormState((prev) => ({ ...prev, data: { ...prev.data, [name]: value.trim() } }));
-  };
+  }, [serverState, navigateToSearch]);
 
   return (
     <form
