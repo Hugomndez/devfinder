@@ -1,4 +1,4 @@
-export type UserData = {
+export type UserProfile = {
   login: string;
   avatar_url: string;
   name: string | null;
@@ -13,9 +13,25 @@ export type UserData = {
   created_at: string;
 };
 
-export type GetUserResponse = {
-  data: UserData;
-  notFound: boolean;
-  rateLimited: boolean;
-  error?: string;
+export type UserDataResponse = {
+  status: 'success' | 'error';
+  data: UserProfile;
+} & ({ status: 'success' } | { status: 'error'; message: string });
+
+export type ServerState = {
+  state: 'initial' | 'success' | 'error';
+  data: { username: string };
+} & (InitialState | SuccessState | ErrorState);
+
+type InitialState = {
+  state: 'initial';
+};
+
+type SuccessState = {
+  state: 'success';
+};
+
+type ErrorState = {
+  state: 'error';
+  message: string;
 };

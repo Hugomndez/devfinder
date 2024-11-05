@@ -1,44 +1,49 @@
 import getUserData from '@/lib/getUserData';
 import Image from 'next/image';
-
 import styles from './ProfileCard.module.css';
 
-export default async function ProfileCard({ query }: { query: string }) {
-  const { data: user } = await getUserData(query);
+type ProfileCardProps = {
+  query: string;
+};
+export default async function ProfileCard(props: ProfileCardProps) {
+  const { data } = await getUserData(props.query);
+
+  const displayName = data.name || data.login;
 
   const socialData = [
-    { icon: LocIconSVG, data: user.location, social: 'location' },
-    { icon: WebsiteIconSVG, data: user.blog, social: 'website' },
-    { icon: TwitterIconSVG, data: user.twitter_username, social: 'twitter' },
-    { icon: CompanyIconSVG, data: user.company, social: 'company' },
+    { icon: LocIconSVG, data: data.location, social: 'location' },
+    { icon: WebsiteIconSVG, data: data.blog, social: 'website' },
+    { icon: TwitterIconSVG, data: data.twitter_username, social: 'twitter' },
+    { icon: CompanyIconSVG, data: data.company, social: 'company' },
   ];
 
   return (
     <section className={styles.section}>
       <Image
         className={styles.avatar}
-        src={user.avatar_url}
-        alt={getNameOrLogin(user)}
+        src={data.avatar_url}
+        alt={`${displayName}'s avatar`}
         width={70}
         height={70}
+        priority
       />
-      <h1 className={styles.name}>{getNameOrLogin(user)}</h1>
-      <span className={styles.login}>{`@${user.login}`}</span>
-      <span className={styles.date}>{formatDate(user.created_at)}</span>
+      <h1 className={styles.name}>{displayName}</h1>
+      <span className={styles.login}>{`@${data.login}`}</span>
+      <span className={styles.date}>{formatDate(data.created_at)}</span>
       <p
         className={styles.bio}
-        data-null={!user.bio}>
-        {user.bio || 'This profile has no bio.'}
+        data-null={!data.bio}>
+        {data.bio || 'This profile has no bio.'}
       </p>
       <div className={styles.stats}>
         <p>
-          Repos <span>{user.public_repos}</span>
+          Repos <span>{data.public_repos}</span>
         </p>
         <p>
-          Followers <span>{user.followers}</span>
+          Followers <span>{data.followers}</span>
         </p>
         <p>
-          Following <span>{user.following}</span>
+          Following <span>{data.following}</span>
         </p>
       </div>
       <div className={styles.social}>
@@ -156,8 +161,4 @@ function formatDate(date: string) {
   const day = d.getDate();
 
   return `Joined ${day} ${month} ${year}`;
-}
-
-function getNameOrLogin(user: { name: string | null; login: string }) {
-  return user.name || user.login;
 }
