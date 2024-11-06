@@ -16,22 +16,13 @@ export type UserProfile = {
 export type UserDataResponse = {
   status: 'success' | 'error';
   data: UserProfile;
-} & ({ status: 'success' } | { status: 'error'; message: string });
-
-export type ServerState = {
-  state: 'initial' | 'success' | 'error';
-  data: { username: string };
-} & (InitialState | SuccessState | ErrorState);
-
-type InitialState = {
-  state: 'initial';
-};
+} & (SuccessState | ErrorState);
 
 type SuccessState = {
-  state: 'success';
+  status: 'success';
 };
 
 type ErrorState = {
-  state: 'error';
+  status: 'error';
   message: string;
 };

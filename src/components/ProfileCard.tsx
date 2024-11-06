@@ -1,12 +1,13 @@
-import getUserData from '@/lib/getUserData';
+import { UserDataResponse } from '@/types';
 import Image from 'next/image';
+import { use } from 'react';
 import styles from './ProfileCard.module.css';
 
 type ProfileCardProps = {
-  query: string;
+  userDataPromise: Promise<UserDataResponse>;
 };
-export default async function ProfileCard(props: ProfileCardProps) {
-  const { data } = await getUserData(props.query);
+export default function ProfileCard({ userDataPromise }: ProfileCardProps) {
+  const { data } = use(userDataPromise);
 
   const displayName = data.name || data.login;
 

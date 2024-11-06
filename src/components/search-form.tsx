@@ -1,64 +1,58 @@
 'use client';
 
-import type { ServerState } from '@/types';
+import type { UserDataResponse } from '@/types';
 import { useRouter } from 'next/navigation';
-import type { ChangeEvent } from 'react';
-import { useActionState, useCallback, useEffect, useState } from 'react';
-import { searchUserAction } from './actions';
+import type { ChangeEvent, FormEvent } from 'react';
+import { use, useState, useTransition } from 'react';
 import styles from './search-form.module.css';
 
-const initialState: ServerState = { state: 'initial', data: { username: '' } };
+type SearchFormProps = {
+  userDataPromise: Promise<UserDataResponse>;
+};
 
-export default function SearchForm() {
-  const [serverState, formAction, isLoading] = useActionState(searchUserAction, initialState);
-  const [formState, setFormState] = useState<ServerState>(serverState);
+const initialState = { username: '' };
+
+export default function SearchForm({ userDataPromise }: SearchFormProps) {
+  const [formState, setFormState] = useState(initialState);
+  const [isPending, startTransition] = useTransition();
+  const data = use(userDataPromise);
   const router = useRouter();
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.currentTarget;
-    setFormState((prev) => ({ ...prev, data: { ...prev.data, [name]: value.trim() } }));
+    setFormState((prev) => ({ ...prev, [name]: value.trim() }));
   };
 
-  const navigateToSearch = useCallback(() => {
-    const encodedQuery = encodeURIComponent(serverState.data.username);
-    router.push(`/?q=${encodedQuery}`);
-  }, [serverState.data.username, router]);
+  const handleUserQuery = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const { value } = event.currentTarget.username;
 
-  useEffect(() => {
-    switch (serverState.state) {
-      case 'success':
-        setFormState(initialState);
-        navigateToSearch();
-        break;
-      case 'error':
-        setFormState(serverState);
-        navigateToSearch();
-        break;
-      default:
-        setFormState(serverState);
-        break;
-    }
-  }, [serverState, navigateToSearch]);
+    startTransition(() => {
+      setFormState(initialState);
+      const encodedQuery = encodeURIComponent(value);
+      router.push(`/?q=${encodedQuery}`);
+    });
+  };
 
   return (
     <form
       className={styles.form}
-      action={formAction}>
+      onSubmit={handleUserQuery}>
       <input
         type='text'
         name='username'
-        value={formState.data.username}
+        value={formState.username}
         onChange={handleChange}
         placeholder='Search GitHub username…'
         autoFocus
         required
       />
       <SearchIconSVG />
-      {formState.state === 'error' && <span className={styles.error}>{formState.message}</span>}
+      {data.status === 'error' && <span className={styles.error}>{data.message}</span>}
       <button
         type='submit'
-        disabled={isLoading}>
-        {isLoading ? <div className={styles.spinner} /> : 'Search'}
+        disabled={isPending}>
+        {isPending ? <div className={styles.spinner} /> : 'Search'}
       </button>
     </form>
   );
