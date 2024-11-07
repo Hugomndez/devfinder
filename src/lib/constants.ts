@@ -1,6 +1,6 @@
+export const APP_NAME = 'devFinder';
 export const API_URL = 'https://api.github.com/users/';
-export const NOT_FOUND = 'Not Found';
-export const RATE_LIMITED = 'API rate limit exceeded';
+export const DEFAULT_QUERY = 'octocat';
 
 export const DEFAULT_DATA = {
   login: 'octocat',
