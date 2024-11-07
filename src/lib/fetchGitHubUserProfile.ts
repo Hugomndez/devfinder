@@ -1,9 +1,9 @@
 import 'server-only';
 
-import type { UserDataResponse, UserProfile } from '@/types';
+import type { DataResponse, GitHubUserProfile } from '@/types';
 import { API_URL, DEFAULT_DATA } from './constants';
 
-export default async function getUserData(username: string): Promise<UserDataResponse> {
+export default async function fetchGitHubUserProfile(username: string): Promise<DataResponse> {
   try {
     const res = await fetch(`${API_URL}${username}`);
 
@@ -17,7 +17,7 @@ export default async function getUserData(username: string): Promise<UserDataRes
 
     const rawData = await res.json();
 
-    const userData: UserProfile = {
+    const data: GitHubUserProfile = {
       login: rawData.login,
       avatar_url: rawData.avatar_url,
       name: rawData.name,
@@ -32,7 +32,7 @@ export default async function getUserData(username: string): Promise<UserDataRes
       created_at: rawData.created_at,
     };
 
-    return { status: 'success', data: userData };
+    return { status: 'success', data };
   } catch (error) {
     return {
       status: 'error',

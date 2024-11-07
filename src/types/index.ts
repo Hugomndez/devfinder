@@ -1,4 +1,4 @@
-export type UserProfile = {
+export type GitHubUserProfile = {
   login: string;
   avatar_url: string;
   name: string | null;
@@ -13,9 +13,9 @@ export type UserProfile = {
   created_at: string;
 };
 
-export type UserDataResponse = {
+export type DataResponse = {
   status: 'success' | 'error';
-  data: UserProfile;
+  data: GitHubUserProfile;
 } & (SuccessState | ErrorState);
 
 type SuccessState = {
