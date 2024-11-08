@@ -1,33 +1,36 @@
 import Header from '@/components/Header';
 import ProfileCard from '@/components/ProfileCard';
 import SearchForm from '@/components/search-form';
-import getUserData from '@/lib/getUserData';
-import { Metadata } from 'next';
+import { APP_NAME, DEFAULT_QUERY } from '@/lib/constants';
+import fetchGitHubUserProfile from '@/lib/fetchGitHubUserProfile';
+import getQueryParam from '@/lib/getQueryParam';
+import type { Metadata } from 'next';
 
-type GenerateMetadataProps = {
+type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export async function generateMetadata({ searchParams }: GenerateMetadataProps): Promise<Metadata> {
-  const { q: _query } = await searchParams;
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const params = await searchParams;
+  const query = getQueryParam(params);
 
   return {
-    title: _query ? `${_query} | devFinder` : 'devFinder',
+    title: query ? `${query} | ${APP_NAME}` : APP_NAME,
   };
 }
 
-export default async function Home({ searchParams }: GenerateMetadataProps) {
-  const { q: _query } = await searchParams;
-  const query = typeof _query === 'string' ? _query : 'octocat';
-  const userData = getUserData(query);
+export default async function Home({ searchParams }: Props) {
+  const params = await searchParams;
+  const query = getQueryParam(params) || DEFAULT_QUERY;
+  const profilePromise = fetchGitHubUserProfile(query);
 
   return (
     <>
       <div>
         <Header />
         <main>
-          <SearchForm userDataPromise={userData} />
-          <ProfileCard userDataPromise={userData} />
+          <SearchForm dataPromise={profilePromise} />
+          <ProfileCard dataPromise={profilePromise} />
         </main>
       </div>
     </>

@@ -1,13 +1,14 @@
-import { UserDataResponse } from '@/types';
+import type { DataResponse } from '@/types';
 import Image from 'next/image';
 import { use } from 'react';
 import styles from './ProfileCard.module.css';
 
-type ProfileCardProps = {
-  userDataPromise: Promise<UserDataResponse>;
+type Props = {
+  dataPromise: Promise<DataResponse>;
 };
-export default function ProfileCard({ userDataPromise }: ProfileCardProps) {
-  const { data } = use(userDataPromise);
+
+export default function ProfileCard({ dataPromise }: Props) {
+  const { data } = use(dataPromise);
 
   const displayName = data.name || data.login;
 
