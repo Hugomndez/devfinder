@@ -1,43 +1,36 @@
 'use client';
 
-import type { UserDataResponse } from '@/types';
+import type { DataResponse } from '@/types';
 import { useRouter } from 'next/navigation';
-import type { ChangeEvent, FormEvent } from 'react';
-import { use, useState, useTransition } from 'react';
+import type { ChangeEvent } from 'react';
+import { use, useState } from 'react';
+import { useFormStatus } from 'react-dom';
 import styles from './search-form.module.css';
 
-type SearchFormProps = {
-  userDataPromise: Promise<UserDataResponse>;
+type Props = {
+  dataPromise: Promise<DataResponse>;
 };
 
-const initialState = { username: '' };
-
-export default function SearchForm({ userDataPromise }: SearchFormProps) {
-  const [formState, setFormState] = useState(initialState);
-  const [isPending, startTransition] = useTransition();
-  const data = use(userDataPromise);
+export default function SearchForm({ dataPromise }: Props) {
+  const [formState, setFormState] = useState({ username: '' });
+  const data = use(dataPromise);
   const router = useRouter();
+
+  const searchAction = (payload: FormData) => {
+    const username = payload.get('username') as string;
+    const encodedQuery = encodeURIComponent(username).toLocaleLowerCase();
+    router.push(`/?q=${encodedQuery}`);
+  };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.currentTarget;
     setFormState((prev) => ({ ...prev, [name]: value.trim() }));
   };
 
-  const handleUserQuery = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const { value } = event.currentTarget.username;
-
-    startTransition(() => {
-      setFormState(initialState);
-      const encodedQuery = encodeURIComponent(value);
-      router.push(`/?q=${encodedQuery}`);
-    });
-  };
-
   return (
     <form
       className={styles.form}
-      onSubmit={handleUserQuery}>
+      action={searchAction}>
       <input
         type='text'
         name='username'
@@ -49,12 +42,19 @@ export default function SearchForm({ userDataPromise }: SearchFormProps) {
       />
       <SearchIconSVG />
       {data.status === 'error' && <span className={styles.error}>{data.message}</span>}
-      <button
-        type='submit'
-        disabled={isPending}>
-        {isPending ? <div className={styles.spinner} /> : 'Search'}
-      </button>
+      <SubmitButton />
     </form>
+  );
+}
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      type='submit'
+      disabled={pending}>
+      {pending ? <div className={styles.spinner} /> : 'Search'}
+    </button>
   );
 }
 
