@@ -1,25 +1,31 @@
 'use client';
 
 import type { DataResponse } from '@/types';
-import { useRouter } from 'next/navigation';
-import type { ChangeEvent } from 'react';
-import { use, useState } from 'react';
-import { useFormStatus } from 'react-dom';
+import { useRouter, useSearchParams } from 'next/navigation';
+import type { ChangeEvent, FormEvent } from 'react';
+import { use, useEffect, useState, useTransition } from 'react';
 import styles from './search-form.module.css';
 
 type Props = {
   dataPromise: Promise<DataResponse>;
 };
 
-export default function SearchForm({ dataPromise }: Props) {
-  const [formState, setFormState] = useState({ username: '' });
-  const data = use(dataPromise);
-  const router = useRouter();
+const initialState = { username: '' };
 
-  const searchAction = (payload: FormData) => {
-    const username = payload.get('username') as string;
-    const encodedQuery = encodeURIComponent(username).toLocaleLowerCase();
-    router.push(`/?q=${encodedQuery}`);
+export default function SearchForm({ dataPromise }: Props) {
+  const [formState, setFormState] = useState(initialState);
+  const [isPending, startTransition] = useTransition();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const data = use(dataPromise);
+
+  const handleSearch = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const { value } = event.currentTarget.username;
+    startTransition(() => {
+      const encodedQuery = encodeURIComponent(value).toLocaleLowerCase();
+      router.push(`/?q=${encodedQuery}`);
+    });
   };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -27,34 +33,32 @@ export default function SearchForm({ dataPromise }: Props) {
     setFormState((prev) => ({ ...prev, [name]: value.trim() }));
   };
 
+  useEffect(() => {
+    if (!searchParams.has('q')) setFormState(initialState);
+  }, [searchParams]);
+
   return (
     <form
       className={styles.form}
-      action={searchAction}>
+      onSubmit={handleSearch}>
       <input
         type='text'
         name='username'
         value={formState.username}
         onChange={handleChange}
+        disabled={isPending}
         placeholder='Search GitHub username…'
         autoFocus
         required
       />
       <SearchIconSVG />
       {data.status === 'error' && <span className={styles.error}>{data.message}</span>}
-      <SubmitButton />
+      <button
+        type='submit'
+        disabled={isPending}>
+        {isPending ? <div className={styles.spinner} /> : 'Search'}
+      </button>
     </form>
-  );
-}
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <button
-      type='submit'
-      disabled={pending}>
-      {pending ? <div className={styles.spinner} /> : 'Search'}
-    </button>
   );
 }
 
