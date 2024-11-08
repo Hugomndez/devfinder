@@ -13,7 +13,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang='en'
-      dir='ltr'>
+      dir='ltr'
+      suppressHydrationWarning>
       <body className={SpaceMono.className}>
         <ThemeScript />
         {children}

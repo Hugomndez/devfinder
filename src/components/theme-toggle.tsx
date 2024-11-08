@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import styles from './theme-toggle.module.css';
 
 const ThemeToggle = () => {
+  const [mounted, setMounted] = useState(false);
   const [theme, setTheme] = useState(global.window?.__currentTheme);
 
   const isDark = theme === 'dark';
@@ -15,6 +16,14 @@ const ThemeToggle = () => {
   useEffect(() => {
     global.window.__onThemeChange = setTheme;
   }, []);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <button
