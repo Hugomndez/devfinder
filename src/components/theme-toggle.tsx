@@ -5,13 +5,19 @@ import styles from './theme-toggle.module.css';
 
 const ThemeToggle = () => {
   const [mounted, setMounted] = useState(false);
-  const [theme, setTheme] = useState(global.window?.__currentTheme);
+  const [theme, setTheme] = useState(global.window?.__currentTheme || 'light');
+  const toggleTheme = global.window?.__toggleTheme;
 
-  const isDark = theme === 'dark';
-
-  const toggleTheme = () => {
-    global.window?.__setThemePreference(isDark ? 'light' : 'dark');
-  };
+  const themeProperties = {
+    dark: {
+      text: 'DARK',
+      icon: <MoonIcon />,
+    },
+    light: {
+      text: 'LIGHT',
+      icon: <SunIcon />,
+    },
+  }[theme];
 
   useEffect(() => {
     global.window.__onThemeChange = setTheme;
@@ -29,7 +35,7 @@ const ThemeToggle = () => {
     <button
       className={styles.button}
       onClick={toggleTheme}>
-      {isDark ? 'DARK' : 'LIGHT'} {isDark ? <MoonIcon /> : <SunIcon />}
+      {themeProperties.text} {themeProperties.icon}
     </button>
   );
 };
