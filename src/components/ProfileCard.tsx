@@ -1,15 +1,12 @@
-import type { DataResponse } from '@/types';
+import type { GitHubUserProfile } from '@/types';
 import Image from 'next/image';
-import { use } from 'react';
 import styles from './ProfileCard.module.css';
 
 type Props = {
-  dataPromise: Promise<DataResponse>;
+  data: GitHubUserProfile;
 };
 
-export default function ProfileCard({ dataPromise }: Props) {
-  const { data } = use(dataPromise);
-
+export default function ProfileCard({ data }: Props) {
   const displayName = data.name || data.login;
 
   const socialData = [

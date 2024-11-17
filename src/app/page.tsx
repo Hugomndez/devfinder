@@ -22,15 +22,15 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 export default async function Home({ searchParams }: Props) {
   const params = await searchParams;
   const query = getQueryParam(params) || DEFAULT_QUERY;
-  const profilePromise = fetchGitHubUserProfile(query);
+  const response = await fetchGitHubUserProfile(query);
 
   return (
     <>
       <div>
         <Header />
         <main>
-          <SearchForm dataPromise={profilePromise} />
-          <ProfileCard dataPromise={profilePromise} />
+          <SearchForm {...response} />
+          <ProfileCard data={response.data} />
         </main>
       </div>
     </>
