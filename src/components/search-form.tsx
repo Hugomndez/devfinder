@@ -1,12 +1,14 @@
 'use client';
 
-import { DataResponse } from '@/types';
 import { useRouter, useSearchParams } from 'next/navigation';
 import type { ChangeEvent, FormEvent } from 'react';
 import { useEffect, useState, useTransition } from 'react';
 import styles from './search-form.module.css';
 
-type Props = DataResponse;
+type Props = {
+  showErrorMessage: boolean;
+  errorMessage: string;
+};
 
 const initialState = { username: '' };
 
@@ -49,7 +51,7 @@ export default function SearchForm(props: Props) {
         required
       />
       <SearchIconSVG />
-      {props.status === 'error' && <span className={styles.error}>{props.message}</span>}
+      {props.showErrorMessage && <span className={styles.error}>{props.errorMessage}</span>}
       <button
         type='submit'
         disabled={isPending}>
