@@ -20,7 +20,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       dir='ltr'
       suppressHydrationWarning>
       <body className={SpaceMono.className}>
-        <ThemeScript />
+        <ThemeScript
+          id='theme-script'
+          data-cfasync='false'
+        />
         {children}
       </body>
     </html>

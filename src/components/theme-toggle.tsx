@@ -1,40 +1,31 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useAppearance } from '@/lib/useAppearance';
+import useMounted from '@/lib/useMounted';
 import styles from './theme-toggle.module.css';
 
 const ThemeToggle = () => {
-  const [mounted, setMounted] = useState(false);
-  const [theme, setTheme] = useState(global.window?.__currentTheme || 'light');
-  const toggleTheme = global.window?.__toggleTheme;
+  const { appearance, toggleAppearance } = useAppearance();
+  const isMounted = useMounted();
 
   const themeProperties = {
-    dark: {
-      text: 'DARK',
-      icon: <MoonIcon />,
-    },
     light: {
       text: 'LIGHT',
       icon: <SunIcon />,
     },
-  }[theme];
+    dark: {
+      text: 'DARK',
+      icon: <MoonIcon />,
+    },
+  }[appearance];
 
-  useEffect(() => {
-    global.window.__onThemeChange = setTheme;
-  }, []);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return null;
-  }
+  if (!isMounted) return null;
 
   return (
     <button
       className={styles.button}
-      onClick={toggleTheme}>
+      onClick={toggleAppearance}
+      aria-label={`Switch to ${appearance === 'light' ? 'dark' : 'light'} theme`}>
       {themeProperties.text} {themeProperties.icon}
     </button>
   );

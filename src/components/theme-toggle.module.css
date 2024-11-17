@@ -17,7 +17,7 @@
   cursor: pointer;
 }
 
-[data-theme='dark'] .button {
+[data-color-scheme='dark'] .button {
   color: var(--color-greyish-blue);
 }
 
@@ -30,7 +30,7 @@
     fill: var(--h1-color);
   }
 
-  [data-theme='dark'] .button:hover {
+  [data-color-scheme='dark'] .button:hover {
     color: var(--color-white);
   }
 

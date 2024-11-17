@@ -18,7 +18,7 @@
   --font-weight-secondary: 400;
 }
 
-[data-theme='dark'] {
+[data-color-scheme='dark'] {
   color-scheme: dark;
 
   --background-color: hsl(220, 40%, 13%);
