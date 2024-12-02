@@ -1,17 +1,14 @@
-import { DetailedHTMLProps } from 'react';
-import { appearanceScript, createConfig } from '../lib/appearanceScript';
+import type { DetailedHTMLProps, ScriptHTMLAttributes } from 'react';
+import { createConfig, script } from '../lib/theme-script';
 
-type ThemeScriptProps = DetailedHTMLProps<
-  React.ScriptHTMLAttributes<HTMLScriptElement>,
-  HTMLScriptElement
->;
+type Props = DetailedHTMLProps<ScriptHTMLAttributes<HTMLScriptElement>, HTMLScriptElement>;
 
-export default function ThemeScript(props: ThemeScriptProps) {
+export default function ThemeScript(props: Props) {
   const config = createConfig({
     defaultColorSchemeMode: 'system',
     forceDefault: false,
     attribute: 'data-color-scheme',
-    storageType: 'localStorage',
+    storageType: 'sessionStorage',
     storageKey: 'colorScheme',
     enableColorScheme: false,
     metaTagThemeColor: {
@@ -23,7 +20,7 @@ export default function ThemeScript(props: ThemeScriptProps) {
   return (
     <script
       {...props}
-      dangerouslySetInnerHTML={{ __html: `(${appearanceScript})(${JSON.stringify(config)});` }}
+      dangerouslySetInnerHTML={{ __html: `(${script})(${JSON.stringify(config)});` }}
     />
   );
 }

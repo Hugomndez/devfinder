@@ -1,16 +1,16 @@
 type ColorScheme = 'light' | 'dark';
-type ColorSchemeMode = 'system' | ColorScheme;
+type PreferredThemeMode = 'system' | ColorScheme;
 
 type MetaTagThemeColorType<
   ForceDefault extends boolean,
-  Mode extends ColorSchemeMode
+  Mode extends PreferredThemeMode
 > = ForceDefault extends true
   ? Mode extends ColorScheme
     ? string
     : Record<ColorScheme, string>
   : Record<ColorScheme, string>;
 
-interface Config<ForceDefault extends boolean, Mode extends ColorSchemeMode> {
+interface Config<ForceDefault extends boolean, Mode extends PreferredThemeMode> {
   defaultColorSchemeMode: Mode;
   forceDefault: ForceDefault;
   attribute: `data-${string}`;
@@ -27,7 +27,7 @@ interface Config<ForceDefault extends boolean, Mode extends ColorSchemeMode> {
  * @returns A strongly-typed configuration object.
  */
 
-export function createConfig<ForceDefault extends boolean, Mode extends ColorSchemeMode>(
+export function createConfig<ForceDefault extends boolean, Mode extends PreferredThemeMode>(
   config: Config<ForceDefault, Mode>
 ): Config<ForceDefault, Mode> {
   return config;
@@ -35,31 +35,40 @@ export function createConfig<ForceDefault extends boolean, Mode extends ColorSch
 
 declare global {
   interface Window {
-    __colorScheme: ColorScheme;
-    __colorSchemeMode: ColorSchemeMode;
-    __toggleColorScheme: () => void;
-    __setColorSchemeMode: (mode: ColorSchemeMode) => void;
-    __updateClientColorScheme: (colorScheme: ColorScheme) => void;
-    __updateClientColorSchemeMode: (mode: ColorSchemeMode) => void;
+    __theme: {
+      getInitialValue: ColorScheme;
+      getInitialMode: PreferredThemeMode;
+      getValue: () => ColorScheme;
+      getMode: () => PreferredThemeMode;
+      subscribe: (listener: (colorScheme: ColorScheme) => void) => () => void;
+      subscribeMode: (listener: (mode: PreferredThemeMode) => void) => () => void;
+      setTheme: (mode: PreferredThemeMode) => void;
+      toggle: () => void;
+    };
   }
 }
 
-export function appearanceScript<ForceDefault extends boolean, Mode extends ColorSchemeMode>(
+export function script<ForceDefault extends boolean, Mode extends PreferredThemeMode>(
   config: Config<ForceDefault, Mode>
 ): void {
   'use strict';
 
   try {
+    let currentColorScheme: ColorScheme;
+    let preferredThemeMode: PreferredThemeMode;
+
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const colorSchemeListeners = new Set<(colorScheme: ColorScheme) => void>();
+    const themeModeListeners = new Set<(mode: PreferredThemeMode) => void>();
 
-    function setColorSchemeMode(mode: ColorSchemeMode) {
+    function apply(mode: PreferredThemeMode) {
       const resolvedScheme = resolveColorScheme(mode);
-      if (resolvedScheme === window.__colorScheme && window.__colorSchemeMode === mode) return;
+      if (resolvedScheme === currentColorScheme && preferredThemeMode === mode) return;
 
-      window.__colorScheme = resolvedScheme;
-      window.__colorSchemeMode = mode;
-      window.__updateClientColorScheme(resolvedScheme);
-      window.__updateClientColorSchemeMode(mode);
+      currentColorScheme = resolvedScheme;
+      preferredThemeMode = mode;
+      colorSchemeListeners.forEach((listener) => listener(resolvedScheme));
+      themeModeListeners.forEach((listener) => listener(mode));
       updateDOM(resolvedScheme);
     }
 
@@ -98,18 +107,18 @@ export function appearanceScript<ForceDefault extends boolean, Mode extends Colo
     }
 
     function handleSystemColorSchemeChange() {
-      setColorSchemeMode(resolveColorSchemeMode());
+      apply(resolvePreferredTheme());
     }
 
     function getStorageAPI() {
       return config.storageType === 'localStorage' ? localStorage : sessionStorage;
     }
 
-    function persistColorSchemeMode(mode: ColorSchemeMode) {
+    function persistPreferredTheme(mode: PreferredThemeMode) {
       getStorageAPI().setItem(config.storageKey, mode);
     }
 
-    function getPersistedColorSchemeMode() {
+    function getPreferredTheme() {
       const value = getStorageAPI().getItem(config.storageKey);
       return value === 'system' || value === 'light' || value === 'dark' ? value : null;
     }
@@ -118,41 +127,55 @@ export function appearanceScript<ForceDefault extends boolean, Mode extends Colo
       return mediaQuery.matches ? 'dark' : 'light';
     }
 
-    function resolveColorSchemeMode() {
-      const storedMode = getPersistedColorSchemeMode();
+    function resolvePreferredTheme() {
+      const storedMode = getPreferredTheme();
       if (storedMode) return storedMode;
 
       return config.defaultColorSchemeMode;
     }
 
-    function resolveColorScheme(mode: ColorSchemeMode): ColorScheme {
+    function resolveColorScheme(mode: PreferredThemeMode): ColorScheme {
       return mode === 'system' ? getSystemColorScheme() : mode;
     }
 
     mediaQuery.addEventListener('change', handleSystemColorSchemeChange);
 
-    window.__setColorSchemeMode = (mode: ColorSchemeMode) => {
-      if (!config.forceDefault) {
-        setColorSchemeMode(mode);
-        persistColorSchemeMode(mode);
-      }
+    const api = {
+      getInitialValue: 'light' as ColorScheme,
+      getInitialMode: 'system' as PreferredThemeMode,
+      getValue: () => currentColorScheme,
+      getMode: () => preferredThemeMode,
+      subscribe: (listener: (colorScheme: ColorScheme) => void) => {
+        colorSchemeListeners.add(listener);
+        return () => colorSchemeListeners.delete(listener);
+      },
+      subscribeMode: (listener: (mode: PreferredThemeMode) => void) => {
+        themeModeListeners.add(listener);
+        return () => themeModeListeners.delete(listener);
+      },
+      setTheme: (mode: PreferredThemeMode) => {
+        if (!config.forceDefault) {
+          apply(mode);
+          persistPreferredTheme(mode);
+        }
+      },
+      toggle: () => {
+        if (!config.forceDefault) {
+          const nextScheme = currentColorScheme === 'light' ? 'dark' : 'light';
+          apply(nextScheme);
+          persistPreferredTheme(nextScheme);
+        }
+      },
     };
 
-    window.__toggleColorScheme = () => {
-      if (!config.forceDefault) {
-        const nextScheme = window.__colorScheme === 'light' ? 'dark' : 'light';
-        setColorSchemeMode(nextScheme);
-        persistColorSchemeMode(nextScheme);
-      }
-    };
-
-    window.__updateClientColorScheme = () => {};
-    window.__updateClientColorSchemeMode = () => {};
-
-    initialize();
-
-    function initialize() {
-      setColorSchemeMode(resolveColorSchemeMode());
+    if (!('__theme' in window)) {
+      Object.defineProperty(window, '__theme', {
+        value: api,
+        writable: false,
+        configurable: false,
+      });
     }
+
+    apply(resolvePreferredTheme());
   } catch (_) {}
 }

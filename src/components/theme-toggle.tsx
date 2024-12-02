@@ -1,11 +1,11 @@
 'use client';
 
-import { useAppearance } from '@/lib/useAppearance';
+import { useTheme } from '@/lib/use-theme';
 import useMounted from '@/lib/useMounted';
 import styles from './theme-toggle.module.css';
 
 const ThemeToggle = () => {
-  const { appearance, toggleAppearance } = useAppearance();
+  const { theme, toggle } = useTheme();
   const isMounted = useMounted();
 
   const themeProperties = {
@@ -17,15 +17,15 @@ const ThemeToggle = () => {
       text: 'DARK',
       icon: <MoonIcon />,
     },
-  }[appearance];
+  }[theme];
 
   if (!isMounted) return null;
 
   return (
     <button
       className={styles.button}
-      onClick={toggleAppearance}
-      aria-label={`Switch to ${appearance === 'light' ? 'dark' : 'light'} theme`}>
+      onClick={toggle}
+      aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}>
       {themeProperties.text} {themeProperties.icon}
     </button>
   );
