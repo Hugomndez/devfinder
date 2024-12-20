@@ -1,23 +1,53 @@
 import { FlatCompat } from '@eslint/eslintrc';
-import js from '@eslint/js';
-
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import reactCompiler from 'eslint-plugin-react-compiler';
 
 const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
+  baseDirectory: import.meta.dirname,
 });
 
-/** @type {import('eslint').Linter.Config[]} */
-const config = [
-  ...compat.extends('next/core-web-vitals'),
-  ...compat.plugins('eslint-plugin-react-compiler'),
-  { ignores: ['.next/*'] },
+const eslintConfig = [
+  ...compat.config({
+    extends: ['next/core-web-vitals', 'next/typescript', 'prettier'],
+    rules: {
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          args: 'all',
+          argsIgnorePattern: '^_',
+          caughtErrors: 'all',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
+        },
+      ],
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-unused-expressions': 'warn',
+      '@typescript-eslint/consistent-type-imports': [
+        'warn',
+        {
+          prefer: 'type-imports',
+        },
+      ],
+    },
+    ignorePatterns: [
+      '**/.next',
+      '**/.cache',
+      '**/package-lock.json',
+      '**/public',
+      '**/node_modules',
+      '**/next-env.d.ts',
+      '**/yarn.lock',
+      '**/src/types/generated/contentful.d.ts',
+    ],
+  }),
+  {
+    plugins: {
+      'react-compiler': reactCompiler,
+    },
+    rules: {
+      'react-compiler/react-compiler': 'error',
+    },
+  },
 ];
-
-export default config;
+export default eslintConfig;

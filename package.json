@@ -6,7 +6,8 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prettier": "prettier --write ."
   },
   "dependencies": {
     "next": "15.1.2",
@@ -14,8 +15,9 @@
     "react-dom": "19.0.0"
   },
   "devDependencies": {
+    "eslint-config-prettier": "9.1.0",
     "@eslint/eslintrc": "3.2.0",
-    "@eslint/js": "9.17.0",
+    "prettier": "3.4.2",
     "@types/node": "22.10.2",
     "@types/react": "19.0.2",
     "@types/react-dom": "19.0.2",
