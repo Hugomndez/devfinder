@@ -51,11 +51,11 @@ Users should be able to:
 
 ### What I learned
 
-First PoC using NextJS App Router. 
+First PoC using NextJS App Router.
 
 ### Useful resources
 
-- [NextJS App dir dark mode](https://github.com/Hugomndez/nextjs-app-darkmode) - Example to implement darkmode theme feature. 
+- [NextJS App dir dark mode](https://github.com/Hugomndez/nextjs-app-darkmode) - Example to implement darkmode theme feature.
 
 ## Author
 

@@ -3,7 +3,7 @@ type PreferredThemeMode = 'system' | ColorScheme;
 
 type MetaTagThemeColorType<
   ForceDefault extends boolean,
-  Mode extends PreferredThemeMode
+  Mode extends PreferredThemeMode,
 > = ForceDefault extends true
   ? Mode extends ColorScheme
     ? string
