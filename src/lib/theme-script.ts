@@ -20,6 +20,17 @@ interface Config<ForceDefault extends boolean, Mode extends PreferredThemeMode> 
   metaTagThemeColor: MetaTagThemeColorType<ForceDefault, Mode>;
 }
 
+declare global {
+  interface Window {
+    __theme: {
+      getValue: () => ColorScheme;
+      getMode: () => PreferredThemeMode;
+      setTheme: (mode: PreferredThemeMode) => void;
+      toggle: () => void;
+    };
+  }
+}
+
 /**
  * Creates and returns a configuration object with enforced types.
  *
@@ -33,21 +44,6 @@ export function createConfig<ForceDefault extends boolean, Mode extends Preferre
   return config;
 }
 
-declare global {
-  interface Window {
-    __theme: {
-      getInitialValue: ColorScheme;
-      getInitialMode: PreferredThemeMode;
-      getValue: () => ColorScheme;
-      getMode: () => PreferredThemeMode;
-      subscribe: (listener: (colorScheme: ColorScheme) => void) => () => void;
-      subscribeMode: (listener: (mode: PreferredThemeMode) => void) => () => void;
-      setTheme: (mode: PreferredThemeMode) => void;
-      toggle: () => void;
-    };
-  }
-}
-
 export function script<ForceDefault extends boolean, Mode extends PreferredThemeMode>(
   config: Config<ForceDefault, Mode>
 ): void {
@@ -56,10 +52,8 @@ export function script<ForceDefault extends boolean, Mode extends PreferredTheme
   try {
     let currentColorScheme: ColorScheme;
     let preferredThemeMode: PreferredThemeMode;
-
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const colorSchemeListeners = new Set<(colorScheme: ColorScheme) => void>();
-    const themeModeListeners = new Set<(mode: PreferredThemeMode) => void>();
+    const themeUpdateEvent = new Event('theme:change');
 
     function apply(mode: PreferredThemeMode) {
       const resolvedScheme = resolveColorScheme(mode);
@@ -67,9 +61,8 @@ export function script<ForceDefault extends boolean, Mode extends PreferredTheme
 
       currentColorScheme = resolvedScheme;
       preferredThemeMode = mode;
-      colorSchemeListeners.forEach((listener) => listener(resolvedScheme));
-      themeModeListeners.forEach((listener) => listener(mode));
       updateDOM(resolvedScheme);
+      document.dispatchEvent(themeUpdateEvent);
     }
 
     function updateDOM(colorScheme: ColorScheme) {
@@ -141,18 +134,8 @@ export function script<ForceDefault extends boolean, Mode extends PreferredTheme
     mediaQuery.addEventListener('change', handleSystemColorSchemeChange);
 
     const api = {
-      getInitialValue: 'light' as ColorScheme,
-      getInitialMode: 'system' as PreferredThemeMode,
       getValue: () => currentColorScheme,
       getMode: () => preferredThemeMode,
-      subscribe: (listener: (colorScheme: ColorScheme) => void) => {
-        colorSchemeListeners.add(listener);
-        return () => colorSchemeListeners.delete(listener);
-      },
-      subscribeMode: (listener: (mode: PreferredThemeMode) => void) => {
-        themeModeListeners.add(listener);
-        return () => themeModeListeners.delete(listener);
-      },
       setTheme: (mode: PreferredThemeMode) => {
         if (!config.forceDefault) {
           apply(mode);

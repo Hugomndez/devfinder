@@ -1,12 +1,12 @@
 'use client';
 
 import { useTheme } from '@/lib/use-theme';
-import useMounted from '@/lib/useMounted';
 import styles from './theme-toggle.module.css';
 
 const ThemeToggle = () => {
   const { theme, toggle } = useTheme();
-  const isMounted = useMounted();
+
+  if (!theme) return null;
 
   const themeProperties = {
     light: {
@@ -18,8 +18,6 @@ const ThemeToggle = () => {
       icon: <MoonIcon />,
     },
   }[theme];
-
-  if (!isMounted) return null;
 
   return (
     <button
