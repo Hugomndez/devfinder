@@ -18,6 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang='en'
       dir='ltr'
+      data-scroll-behavior='smooth'
       suppressHydrationWarning>
       <body className={SpaceMono.className}>
         <ThemeScript

@@ -1,29 +1,33 @@
 :root {
-  color-scheme: light;
+  --color-white: hsl(0 0 100);
+  --color-greyish-blue: hsl(217 20 51);
+  --color-blue: hsl(212 100 50 / 1);
+  --color-red: hsl(0 91 62 / 1);
 
-  --max-width: 730px;
-  --min-width: 320px;
+  color-scheme: light dark;
 
-  --color-white: hsl(0, 0%, 100%);
-  --color-greyish-blue: hsl(217, 20%, 51%);
-  --color-blue: hsla(212, 100%, 50%, 1);
-  --color-red: hsla(0, 91%, 62%, 1);
-
-  --background-color: hsl(227, 100%, 98%);
-  --h1-color: hsl(217, 21%, 21%);
-  --p-color: hsla(217, 35%, 45%, 1);
+  --card-background: light-dark(var(--color-white), hsl(222 41 20));
+  --background-color: light-dark(hsl(227 100 98), hsl(220 40 13));
+  --h1-color: light-dark(hsl(217 21 21), var(--color-white));
+  --box-shadow-color: light-dark(0px 16px 30px -10px rgba(70, 96, 187, 0.2), unset);
+  --p-color: light-dark(hsl(217 35 45 / 1), var(--color-white));
+  --svg-color: light-dark(hsl(217 35 45 / 1), var(--color-white));
+  --date-color: light-dark(var(--color-greyish-blue), var(--color-white));
 
   --font-family: 'Space Mono';
   --font-weight-primary: 700;
   --font-weight-secondary: 400;
+
+  --max-width: 730px;
+  --min-width: 320px;
+}
+
+[data-color-scheme='light'] {
+  color-scheme: light;
 }
 
 [data-color-scheme='dark'] {
   color-scheme: dark;
-
-  --background-color: hsl(220, 40%, 13%);
-  --card-background: hsl(222, 41%, 20%);
-  --h1-color: var(--color-white);
 }
 
 *,

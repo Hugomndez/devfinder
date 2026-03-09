@@ -17,24 +17,12 @@
   cursor: pointer;
 }
 
-[data-color-scheme='dark'] .button {
-  color: var(--color-greyish-blue);
-}
-
 @media (hover: hover) {
   .button:hover {
     color: var(--h1-color);
   }
 
-  .button:hover svg g path {
-    fill: var(--h1-color);
-  }
-
-  [data-color-scheme='dark'] .button:hover {
-    color: var(--color-white);
-  }
-
   .button:hover svg path {
-    fill: var(--color-white);
+    fill: var(--h1-color);
   }
 }
