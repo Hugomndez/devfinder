@@ -1,30 +1,33 @@
-import { FlatCompat } from '@eslint/eslintrc';
-import reactCompiler from 'eslint-plugin-react-compiler';
+import nextCoreWebVitals from 'eslint-config-next/core-web-vitals';
+import nextTypescript from 'eslint-config-next/typescript';
+import prettier from 'eslint-config-prettier/flat';
+import { defineConfig, globalIgnores } from 'eslint/config';
 
-const compat = new FlatCompat({
-  baseDirectory: import.meta.dirname,
-});
-
-const eslintConfig = [
-  ...compat.config({
-    extends: ['next/core-web-vitals', 'prettier'],
-    ignorePatterns: [
-      '**/.next',
-      '**/.cache',
-      '**/package-lock.json',
-      '**/public',
-      '**/node_modules',
-      '**/next-env.d.ts',
-      '**/yarn.lock',
-    ],
-  }),
+const eslintConfig = defineConfig([
+  globalIgnores(['.next/**', 'out/**', 'build/**', 'public/**', 'next-env.d.ts', 'yarn.lock']),
+  ...nextCoreWebVitals,
+  ...nextTypescript,
   {
-    plugins: {
-      'react-compiler': reactCompiler,
-    },
     rules: {
-      'react-compiler/react-compiler': 'error',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          varsIgnorePattern: '^_',
+          argsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
+      ],
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-unused-expressions': 'warn',
+      '@typescript-eslint/consistent-type-imports': [
+        'warn',
+        {
+          prefer: 'type-imports',
+        },
+      ],
     },
   },
-];
+  prettier,
+]);
+
 export default eslintConfig;

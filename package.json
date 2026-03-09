@@ -10,29 +10,31 @@
   },
   "packageManager": "npm@11.6.2",
   "scripts": {
-    "dev": "next dev --turbo",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "prettier": "prettier --write ."
   },
   "dependencies": {
-    "next": "15.1.2",
-    "react": "19.0.0",
-    "react-dom": "19.0.0"
+    "next": "16.1.6",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "3.2.0",
-    "@types/node": "22.10.2",
-    "@types/react": "19.0.2",
-    "@types/react-dom": "19.0.2",
-    "babel-plugin-react-compiler": "19.0.0-beta-201e55d-20241215",
-    "eslint": "9.17.0",
-    "eslint-config-next": "15.1.2",
-    "eslint-config-prettier": "9.1.0",
-    "eslint-plugin-react-compiler": "19.0.0-beta-201e55d-20241215",
-    "prettier": "3.4.2",
+    "@types/node": "25.3.5",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "babel-plugin-react-compiler": "1.0.0",
+    "eslint": "9.39.2",
+    "eslint-config-next": "16.1.6",
+    "eslint-config-prettier": "10.1.8",
+    "prettier": "3.8.1",
     "server-only": "0.0.1",
     "typescript": "5.7.2"
+  },
+  "overrides": {
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3"
   }
 }

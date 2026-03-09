@@ -1,13 +1,11 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  reactStrictMode: true,
+  reactCompiler: true,
   images: {
     remotePatterns: [{ protocol: 'https', hostname: 'avatars.githubusercontent.com' }],
   },
-  experimental: {
-    reactCompiler: true,
-  },
+  logging: { fetches: { fullUrl: true, hmrRefreshes: true } },
 };
 
 export default nextConfig;

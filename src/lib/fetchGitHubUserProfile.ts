@@ -33,7 +33,7 @@ export default async function fetchGitHubUserProfile(username: string): Promise<
     };
 
     return { status: 'success', data };
-  } catch (error) {
+  } catch (_) {
     return {
       status: 'error',
       data: DEFAULT_DATA,
