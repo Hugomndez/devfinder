@@ -4,11 +4,11 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": "22.x",
-    "npm": "10.x",
+    "node": "24.x",
+    "npm": "11.x",
     "yarn": "please-use-npm-instead"
   },
-  "packageManager": "npm@10.9.0",
+  "packageManager": "npm@11.6.2",
   "scripts": {
     "dev": "next dev --turbo",
     "build": "next build",
